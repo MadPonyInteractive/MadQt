@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     
 setuptools.setup(
-    name='MadQt-MadPonyInteractive',
+    name='MadQt',
     version='0.0.1',    
     description='Tutorials and Tools for PyQt and PySide',
     long_description = long_description,
