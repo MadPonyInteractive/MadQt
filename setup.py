@@ -1,10 +1,10 @@
-from setuptools import setup
+import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     
-setup(
-    name='MadQt',
+setuptools.setup(
+    name='MadQt-MadPonyInteractive',
     version='0.0.1',    
     description='Tutorials and Tools for PyQt and PySide',
     long_description = long_description,
@@ -13,8 +13,8 @@ setup(
     author='Fabio Goncalves',
     author_email='fabiogoncalves@live.co.uk',
     license='MIT',
-    install_requires=['PyQt>=6.0',
-                      'PySide>=6.0',                    
+    install_requires=['PyQt6>=6.0.0',
+                      'PySide6>=6.0.0',
                       ],
 
     classifiers=[
@@ -33,3 +33,9 @@ setup(
     packages=setuptools.find_packages(where="MadQt"),
     python_requires=">=3.9",  
 )
+#root-install:  pip install . --use-feature=in-tree-build
+#package-check: pip install --upgrade . --use-feature=in-tree-build
+#uninstall:     pip uninstall MadQt
+#build:         py -m build
+# import MadQt
+# print("MadQt version:", MadQt.__version__)
