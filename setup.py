@@ -13,10 +13,9 @@ setuptools.setup(
     author='Fabio Goncalves',
     author_email='fabiogoncalves@live.co.uk',
     license='MIT',
-    install_requires=['PyQt6>=6.0.0',
-                      'PySide6>=6.0.0',
-                      ],
-
+    # install_requires=['PyQt6>=6.0.0',
+    #                   'PySide6>=6.0.0',
+    #                   ],
     classifiers=[
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: MIT License',  
@@ -32,9 +31,3 @@ setuptools.setup(
     packages=setuptools.find_packages(where="MadQt"),
     python_requires=">=3.9",  
 )
-#root-install:  pip install . --use-feature=in-tree-build
-#package-check: pip install --upgrade . --use-feature=in-tree-build
-#uninstall:     pip uninstall MadQt
-#build:         py -m build
-# import MadQt
-# print("MadQt version:", MadQt.__version__)
