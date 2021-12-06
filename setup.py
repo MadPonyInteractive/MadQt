@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.2',
+    version='0.0.3',
     description='Tutorials and Tools for PyQt and PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -27,7 +27,7 @@ setuptools.setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: Education',
     ],
-    package_dir={"": "MadQt"},
-    packages=setuptools.find_packages(where="MadQt"),
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
     python_requires=">=3.9",  
 )
