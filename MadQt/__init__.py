@@ -75,6 +75,6 @@ from MadQt.Qt import FRAMEWORK, QDESIGNER_PLUGIN_PATHS
 from MadQt.Tools import App
 
 __all__ = ["Qt", "App"]
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = 'Fabio Goncalves'
 __credits__ = 'Riverbank Computing'
