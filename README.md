@@ -1,6 +1,15 @@
 # MadQt
 Tutorials and Tools for PyQt and PySide
 
+## Dependencies
+
+Python      >= 3.9
+
+PySide6     >= 6.0.0
+
+Pillow      >= 8.3.0
+
+pyinstaller >= 4.7
 
 # Getting Started
 
