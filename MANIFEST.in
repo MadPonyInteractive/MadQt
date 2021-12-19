@@ -1,0 +1,3 @@
+include LICENSE
+recursive-include src/scripts *.exe *.py
+recursive-include src/Templates *.ico *.qrc *.py

@@ -1,0 +1,32 @@
+<RCC>
+  <qresource prefix="images">
+    <file>img/mpi_logo_small.png</file>
+    <file>img/mpi_logo.png</file>
+    <file>img/mpi_logo_icon.ico</file>
+  </qresource>
+  <qresource prefix="icons">
+    <file>img/cil-clipboard.png</file>
+    <file>img/cil-external-link.png</file>
+    <file>img/cil-size-grip.png</file>
+    <file>img/trash-32.png</file>
+    <file>img/widgets-64.png</file>
+    <file>img/cil-check-alt.png</file>
+    <file>img/cil-chevron-left.png</file>
+    <file>img/cil-chevron-right.png</file>
+    <file>img/cil-plus.png</file>
+    <file>img/sublime-text-48.png</file>
+    <file>img/cil-media-play.png</file>
+    <file>img/cil-view-quilt.png</file>
+    <file>img/cil-x.png</file>
+    <file>img/cil-file.png</file>
+    <file>img/cil-loop-circular.png</file>
+    <file>img/cil-share.png</file>
+    <file>img/cil-code.png</file>
+    <file>img/cil-folder-open.png</file>
+    <file>img/cil-home.png</file>
+    <file>img/cil-pencil.png</file>
+    <file>img/cil-satelite.png</file>
+    <file>img/cil-save.png</file>
+    <file>img/cil-settings.png</file>
+  </qresource>
+</RCC>

@@ -71,11 +71,111 @@
     ## $QT_END_LICENSE$
 """
 from __future__ import absolute_import
-import sys, os, subprocess
+import sys, os, subprocess, fileinput, platform, io
+from PIL import Image, ImageChops
 import xml.etree.ElementTree as xml
 from MadQt.Qt.QtWidgets import QApplication, QMainWindow, QWidget
 from MadQt.Qt.QtCore import QDir
 import MadQt
+
+def createIco(file_in,file_out=None,sizes=[(32,32)]):
+    """
+        file_in must be in read format
+            file_in = r'filename'
+        size may be [
+            (16, 16), (24, 24), (32, 32),
+            (48, 48), (64, 64), (128, 128), (255, 255)
+        ]
+
+    """
+    if not file_out:
+        file_out = os.path.splitext(file_in)[0]+'.ico'
+
+    with Image.open(file_in) as img:
+        img = img.convert('RGBA')# windows fix
+        img.save(file_out, format = 'ICO', sizes=sizes)
+        # img.save(file_out, format = 'ICO', bitmap_format="bmp", sizes=sizes)
+    return file_out
+
+def tintImage(image, tint_color, _type=0):
+    """usage: tintImage(dest_img,(255,0,0))"""
+    with Image.open(image) as img:
+        if _type == 0 and img.mode == 'RGBA':
+            img=ImageChops.composite(Image.new(img.mode, img.size, tint_color),Image.new(img.mode, img.size, (0,0,0,0)), img)
+        else:
+            img=ImageChops.multiply(img, Image.new(img.mode, img.size, tint_color))
+        img.save(image)
+
+def QDesignerBaseClasses():
+    """QDesigner accepted custom widget sub classes"""
+    return [
+        'QGroupButton',
+        'QCalendarWidget',
+        'QCheckBox',
+        'QColumnView',
+        'QComboBox',
+        'QCommandLinkButton',
+        'QDateEdit',
+        'QDateTimeEdit',
+        'QDial',
+        'QDialogButtonBox',
+        'QDockWidget',
+        'QDoubleSpinBox',
+        'QFontComboBox',
+        'QFrame',
+        'QGraphicsView',
+        'QGroupBox',
+        'QKeySequenceEdit',
+        'QLCDNumber',
+        'QLabel',
+        'QLineEdit',
+        'QListView',
+        'QListWidget',
+        'QMenu',
+        'QMenuBar',
+        'QOpenGLWidget',
+        'QPlainTextEdit',
+        'QProgressBar',
+        'QPushButton',
+        'QRadioButton',
+        'QScrollArea',
+        'QScrollBar',
+        'QSlider',
+        'QSpinBox',
+        'QSplitter',
+        'QStackedWidget',
+        'QStatusBar',
+        'QTabWidget',
+        'QTableView',
+        'QTableWidget',
+        'QTextBrowser',
+        'QTextBrowser',
+        'QTextEdit',
+        'QTimeEdit',
+        'QToolBar',
+        'QToolBox',
+        'QToolButton',
+        'QTreeView',
+        'QTreeWidget',
+        'QUndoView',
+        'QWebEngineView',
+        'QWidget',
+        'QWizard',
+        'QWizardPage',
+    ]
+
+def cleanString(s,spaces_for_underscores=False):
+    """cleans a string from special chars and spaces"""
+    if spaces_for_underscores: s= s.strip().replace(' ','_')
+    return "".join(x for x in s if x.isalnum() or x == '_')
+
+def openFileExplorer(path):
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
 
 def fullPath(file,_dir=None):
     """returns full path and file name for given file
@@ -90,7 +190,14 @@ def isFile(file,_dir=None):
     """
     return os.path.isfile(fullPath(file,_dir))
 
+def replaceInFile(file, _from, _to):
+    """ replaces all occurrences of _from to _to in given file """
+    for line in fileinput.input(file, inplace=1):
+        line = line.replace(_from, _to)
+        sys.stdout.write(line)
+
 def getUi_class(file):
+    """returns Ui_"class" from compiled ui file"""
     with open(file,"r") as f:
         for line in f:
             if 'class' in line and 'Ui_' in line:
@@ -98,23 +205,89 @@ def getUi_class(file):
                 end = line.index('(')
                 return line[start:end]
 
+def deleteLineFromFile(file,string):
+    """Deletes all lines matching string"""
+    with io.open(file, "r", encoding='utf-8') as fp:
+        lines = fp.readlines()
+
+    with io.open(file, "w", encoding='utf-8') as fp:
+        for line in lines:
+            if string not in line:
+                fp.write(line)
+
+def removeQrcs(uiFile):
+    try:
+        parsed = xml.parse(uiFile)
+    except:
+        # returns error because it found:
+        # </resources> closed tag
+        # so we remove it
+        deleteLineFromFile(uiFile,'</resources>')
+        parsed = xml.parse(uiFile)
+
+    resourcesElem = parsed.find('resources')
+    if resourcesElem:
+        parsed.getroot().remove(resourcesElem)
+        xml.indent(parsed.getroot())
+        parsed.write(uiFile,xml_declaration=True, encoding='UTF-8')
+
+def addQrc(qrc,uiFile):
+    """
+        Params:
+            qrc - filename = resource.qrc
+            uiFile - full path to ui file
+
+        Includes qrc file in ui file if not already present
+        return True if included
+        return False if was already included
+    """
+    try:
+        parsed = xml.parse(uiFile)
+    except:
+        # returns error because it found:
+        # </resources> closed tag
+        # so we remove it
+        deleteLineFromFile(uiFile,'</resources>')
+        parsed = xml.parse(uiFile)
+
+    resourcesElem = parsed.find('resources')
+    if resourcesElem:
+        for include in resourcesElem.findall('include'):
+            if qrc==include.get('location'):
+                # qrc already included
+                return False
+    else:
+        resourcesElem = xml.Element('resources')
+        parsed.getroot().append(resourcesElem)
+
+    inc = xml.SubElement(resourcesElem,'include')
+    inc.set('location',qrc)
+    xml.indent(parsed.getroot())
+    parsed.write(uiFile,xml_declaration=True, encoding='UTF-8')
+    return True
+
 def cleanQrc(uiFile):
     """
         Looks for included resources files in provided .ui file
 
-        If it doesn't found any, it returns the original file else:
+        If it doesn't find any, it returns the original file else:
            Adds all search paths to Qt
            Converts all paths
                 turns this> :/images/C:/Users/mindd/Desktop/CircleOfFifths.jpg
                 into this>  images:CircleOfFifths.jpg
            Removes resources 'include' tag
-           Creates and returns new _mpi.ui file
+           Creates and returns new _mpi.ui file or original
     """
+
+    # uiFile = os.path.join(os.getcwd(),uiFile)
     parsed = xml.parse(uiFile)
-    include_found=False
+
+    # No resource.qrc files found
+    # we return the original file
+    if parsed.find('resources') is None: return uiFile
+
     # Add search paths
     for include in parsed.iter('include'):
-        include_found=True
         location = include.get('location')# qrc file
         if 'qrc' in location:
             qrcFile = xml.parse(location)
@@ -123,10 +296,6 @@ def cleanQrc(uiFile):
                 for file in qresource.findall('file'):
                     QDir.addSearchPath(prefix, os.path.dirname(file.text))
                     # print(location,prefix, file.text)
-
-    # No resource.qrc files found
-    # we return the original file
-    if not include_found: return uiFile
 
     # fix resources paths
     def fixPath(path):
@@ -162,7 +331,8 @@ def cleanQrc(uiFile):
     if parsed.find('resources') is not None:
         parsed.getroot().remove(parsed.find('resources'))
 
-    mpi_file = uiFile.replace('.ui','.mpi')
+    mpi_file = uiFile.replace('.ui','_mpi.ui')
+    xml.indent(parsed.getroot())
     parsed.write(mpi_file)
     return mpi_file
 
@@ -190,11 +360,18 @@ def compileUi(ui_file,py_file=None):
     ui_file = cleanQrc(ui_file)
 
     if 'PyQt' in MadQt.Qt.FRAMEWORK:
-        uipy = subprocess.check_output(['pyuic'+MadQt.Qt.FRAMEWORK[-1], '-o', ui_file])
+        uipy = subprocess.check_output(['pyuic'+MadQt.Qt.FRAMEWORK[-1], '-o', ui_file],\
+         shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     else:
-        uipy = subprocess.check_output([MadQt.Qt.FRAMEWORK.lower() + '-uic', ui_file])
+        uipy = subprocess.check_output([MadQt.Qt.FRAMEWORK.lower() + '-uic', ui_file],\
+         shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 
-    py_file = py_file or ui_file.replace('.mpi','.py')
+    if '_mpi.ui' in ui_file:
+        py_file = py_file or ui_file.replace('_mpi.ui','.py')
+    else:
+        py_file = py_file or ui_file.replace('.ui','.py')
+
+    # print(ui_file)
     try:
         # Write the file
         with open(py_file, 'w') as f:
@@ -279,26 +456,37 @@ def loadUi(ui,win=None):
     else:
         return setup, win
 
+def compileUiSimple(ui_file,py_file=None):
+    if not isFile(ui_file):
+        raise ValueError('MadQt.Tools.compileUi: Provided .ui file not found!')
 
-# TODO: TEST THIS
-# DELETE C:\Users\mindd\AppData\Local\Programs\Python\Python310\Scripts\pyside6-rcc
-# AND Try bellow
-def compileQrc(qrc,_dir=None,overwrite=True):
+    py_file = ui_file.replace('.ui','.py') if not py_file else py_file
+
+    if 'PyQt' in MadQt.Qt.FRAMEWORK:
+        subprocess.Popen(['pyuic'+MadQt.Qt.FRAMEWORK[-1], ui_file, '-o', py_file],shell=True).wait()
+    else:
+        subprocess.Popen([MadQt.Qt.FRAMEWORK.lower() + '-uic', ui_file, '-o', py_file],shell=True).wait()
+
+    return py_file
+
+def compileQrc(qrc,dest_dir=None,overwrite=True):
     """Compiles a qrc file
         ex:
         from resources.qrc
-        creates resources_rc.py
+        creates dest_dir/resources_rc.py
     """
-    compiled_name, _ = os.path.splitext(qrc)
-    compiled_name+='_rc.py'
-    qrc = fullPath(qrc,_dir)
+    src_dir = os.path.dirname(qrc)
+    base_name = os.path.basename(qrc)
+    dest_dir = src_dir if not dest_dir else dest_dir
+    compiled_name = base_name.replace('.qrc','_rc.py')
+
     if not isFile(compiled_name) or overwrite:
+        compiled_path = os.path.join(dest_dir,compiled_name)
         p_dir = os.getcwd()
-        _dir = os.path.dirname(MadQt.Tools.__file__)
-        os.chdir(_dir)
-        compiled_path = os.path.join(p_dir,compiled_name)
-        subprocess.Popen(['pyside6-rcc', qrc, '-o', compiled_path], shell=True).wait()
+        os.chdir(src_dir)
+        subprocess.Popen(['pyside6-rcc', base_name, '-o', compiled_path], shell=True).wait()
         os.chdir(p_dir)
+    return compiled_path
 
 class App:
     """ Creates a QApplication and launches it.
@@ -379,10 +567,7 @@ class App:
         self.app.exec()
 
     def aboutToQuit(self):
-        if self.ui_file:
-            os.remove(self.ui_file.replace('.ui','.mpi'))
-        else:#look for .mpi files
-            [os.remove(file) for file in getFiles(ext='.mpi')]
+        [os.remove(file) for file in getFiles('_mpi','.ui')]
 
     def __repr__(self):
         return " ".join(F"""App(

@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.3',
+    version='0.0.10',
     description='Tutorials and Tools for PyQt and PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -13,9 +13,10 @@ setuptools.setup(
     author='Fabio Goncalves',
     author_email='fabiogoncalves@live.co.uk',
     license='MIT',
-    # install_requires=['PyQt6>=6.0.0',
-    #                   'PySide6>=6.0.0',
-    #                   ],
+    install_requires=['PySide6 >=6.0.0',# we need it to be able to compile resources
+                      'Pillow >= 8.3.0',
+                      'pyinstaller >= 4.7'
+                     ],
     classifiers=[
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: MIT License',  
@@ -27,6 +28,13 @@ setuptools.setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: Education',
     ],
+    # gui_scripts=[],
+    entry_points={
+        'console_scripts': [
+            'MadQtProjectManager=MadQt.scripts.ProjectManager:main',
+        ],
+    },
+    include_package_data=True,
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.9",  
