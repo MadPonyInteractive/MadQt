@@ -1,26 +1,34 @@
-from PySide6.QtWidgets import *
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-import os, json, shutil, webbrowser, tempfile, subprocess, site, sys, fileinput
+from MadQt.Qt.QtWidgets import *
+from MadQt.Qt.QtCore import *
+from MadQt.Qt.QtGui import *
+import PySide6, os, json, shutil, webbrowser, tempfile, subprocess, sys, fileinput
 import xml.etree.ElementTree as xml
-import MadQt.Tools as Mt
+from MadQt import Tools as Mt
 from MadQt import Templates
+from MadQt import Apps
 
 # give this to users for them to create a shortcut
 # https://pypi.org/project/psgshortcut/
 
-# To use only in development
-# from pyside6_loader import PySide6Ui
-# PySide6Ui('gui/main.ui').toPy()
-
 # pyside6-uic main.ui -o main.py
 # pyside6-rcc resources.qrc -o resources_rc.py
 
-from gui import main as gui
+# to gui.py
+# from MadQt.Apps.ProjectManager.myWidgets import (JumpButton, ListView, ToolButton, TreeView)
+# from MadQt.Apps.ProjectManager import resources_rc
 
-def sitePackages():
-    """returns site-packages directory"""
-    return [i for i in site.getsitepackages() if 'site-packages' in i][0]
+# To use only in development
+# from pyside6_loader import PySide6Ui
+# PySide6Ui('gui.ui').toPy()
+from MadQt.Apps.ProjectManager import gui
+
+def pySideDir():
+    """returns the path to PySide6"""
+    return os.path.dirname(PySide6.__file__)
+
+def appDir():
+    """returns the path to the app directory"""
+    return os.path.dirname(Apps.__file__)
 
 def templateDir():
     """returns the path to the templates directory"""
@@ -420,7 +428,7 @@ class CustomWidgetClass(QTreeWidgetItem):
 class App(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowMaximizeButtonHint)
+        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowMaximizeButtonHint|Qt.WindowMinimizeButtonHint)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         self.ui = gui.Ui_MainWindow()
         self.ui.setupUi(self)
@@ -443,7 +451,6 @@ class App(QMainWindow):
         # self.act.trigger()
         # print(self.ui.runBtn.actions())
         # print(self.ui.actionPotatoes)
-
 
     # Ui Methods
     def thread(f):
@@ -646,7 +653,7 @@ class App(QMainWindow):
         self.ui.ProjectsList.dropped.connect(self.droppedProject)
 
         # Settings Page
-        default_qtPath = os.path.join(sitePackages(),'PySide6')
+        default_qtPath = os.path.join(pySideDir())
         self.ui.QtDesignerPathInput.setText(self.settings.value("usrInput/designerPath", default_qtPath))
         self.ui.sublimePathInput.setText(self.settings.value("usrInput/sublimePath", ''))
 
@@ -655,6 +662,9 @@ class App(QMainWindow):
 
         self.ui.SettDoneBtn.clicked.connect(lambda: self.setMainPageIndex(None))
         self.ui.saveSett.clicked.connect(self.saveUserSettings)
+
+        self.ui.createMQEXEC.clicked.connect(self.openMQEXEC)
+        self.ui.createExecBtn_2.clicked.connect(self.createMQEXEC)
 
         # New custom widget page
         self.ui.cwQtClass.addItems(Mt.QDesignerBaseClasses())
@@ -721,6 +731,69 @@ class App(QMainWindow):
         self.ui.pyinstallerHelp.clicked.connect(lambda:\
          webbrowser.open('https://pyinstaller.readthedocs.io/en/stable/when-things-go-wrong.html'))
 
+        self.ui.pyinstallerHelp_2.clicked.connect(lambda:\
+         webbrowser.open('https://pyinstaller.readthedocs.io/en/stable/when-things-go-wrong.html'))
+
+    def openMQEXEC(self):
+        #folder select
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "MadQt Project Manager - Select install location",
+                '', options)
+        if directory:
+            if os.path.isdir(directory):
+                self.selectedPath = directory
+                self.setMainPageIndex(6)
+
+    @thread
+    def runExec2(self,arguments):
+        process = subprocess.Popen(arguments, shell=True, bufsize = 1,
+            stdout=subprocess.PIPE, stderr = subprocess.STDOUT,
+            encoding='utf-8', errors = 'replace')
+        while True:
+            realtime_output = process.stdout.readline()
+            if realtime_output == '' and process.poll() is not None:
+                self.finishMQEXEC()
+                break
+            if realtime_output:
+                self.ui.execOutput_2.append(realtime_output.strip())
+
+    def createMQEXEC(self):
+        managerFolder = os.path.join(appDir(),'ProjectManager')
+        os.chdir(managerFolder)
+        madQtIcon = os.path.join(templateDir(),'NewProject','gui','logo.ico')
+        arguments = F"pyinstaller "
+        arguments += self.ui.execArgs_2.text()
+        arguments +=F" --name=MadQtProjectManager --icon {madQtIcon} main.py"
+
+        self.ui.execOutput_2.ensureCursorVisible()
+        self.ui.execOutput_2.append('Installing...')
+        self.runExec2(arguments)
+
+    def finishMQEXEC(self):
+        managerFolder = os.path.join(appDir(),'ProjectManager')
+
+        for file in os.listdir(managerFolder):
+            if os.path.splitext(file)[1] == '.spec':
+                os.remove(file)
+                break
+        shutil.rmtree(os.path.join(managerFolder,'build'))
+        src = os.path.join(managerFolder,'dist')
+        dst = self.selectedPath
+
+        findAt = os.path.join(dst,'dist')
+        if os.path.isdir(findAt):shutil.rmtree(findAt)
+        shutil.move(src, dst, copy_function = shutil.copytree)
+
+        self.ui.execOutput_2.append(F"Successfully created executable for MadQtProjectManager!")
+        self.ui.execOutput_2.append(F"Output files located @ {findAt}")
+        self.ui.execOutput_2.moveCursor(QTextCursor.End)
+
+        # Mt.openFileExplorer(findAt)
+
+        self.ui.statusbar.showMessage('Executable created!')
+
+
     @thread
     def runExec(self,arguments):
         process = subprocess.Popen(arguments, shell=True, bufsize = 1,
@@ -733,7 +806,6 @@ class App(QMainWindow):
                 break
             if realtime_output:
                 self.ui.execOutput.append(realtime_output.strip())
-                # self.ui.execOutput.moveCursor(QTextCursor.End)
 
     def finishExec(self):
         for file in os.listdir(self.project.devPath()):
@@ -1574,6 +1646,7 @@ class App(QMainWindow):
             self.settings.setValue("usrInput/sublimePath", sp)
             self.ui.sublimePBtn.setStatusTip('Open sublime project')
             if self.project.valid:self.ui.sublimePBtn.setEnabled(1)
+        self.setMainPageIndex(2)
 
     def hasSublime(self):
         """returns sublime text is available"""
@@ -1587,7 +1660,7 @@ def main():
     app = QApplication(sys.argv)
     window = App()
     window.show()
-    exit(app.exec())
+    sys.exit(app.exec())
 
 if __name__ == '__main__':
     main()

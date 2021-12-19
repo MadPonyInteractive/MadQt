@@ -3,10 +3,11 @@ from MadQt.Qt.QtWidgets import QApplication
 from gui import MainWindow
 
 if __name__ == '__main__':
-    app = QApplication([])
+    import sys
+    app = QApplication(sys.argv)
     window = MainWindow.Ui()
     window.show()
-    app.exec()
+    sys.exit(app.exec())
 
 """
     WARNING: The above code will only work if in the

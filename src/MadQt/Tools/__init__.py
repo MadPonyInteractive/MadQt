@@ -484,6 +484,7 @@ def compileQrc(qrc,dest_dir=None,overwrite=True):
         compiled_path = os.path.join(dest_dir,compiled_name)
         p_dir = os.getcwd()
         os.chdir(src_dir)
+        # subprocess.Popen(['MadQt-rcc', base_name, '-o', compiled_path], shell=True).wait()
         subprocess.Popen(['pyside6-rcc', base_name, '-o', compiled_path], shell=True).wait()
         os.chdir(p_dir)
     return compiled_path
