@@ -1,7 +1,17 @@
 # MadQt
 Tutorials and Tools for PyQt and PySide
 
-Follow our [YouTube channel](https://www.youtube.com/c/MadPonyInteractive)
+
+# Getting Started
+
+```python
+pip install MadQt
+```
+
+Visit our [YouTube channel](https://www.youtube.com/c/MadPonyInteractive)
+
+Follow along with our main course on [YouTube](https://youtube.com/playlist?list=PLuvCsqbtUSFAEmez6Tuyi2KitVcS4fLWX)
+
 
 Support this project:
 
