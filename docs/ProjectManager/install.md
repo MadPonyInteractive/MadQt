@@ -2,6 +2,7 @@
 layout: default
 title: Installation
 parent: Project Manager
+nav_order: 0
 ---
 
 # Installation
