@@ -28,11 +28,3 @@ Support this project:
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
 </a>
 
-***
-
-# Under Construction
-## This is a work in progress
-### Please come back later
-#### Thank you
-##### This is 5
-###### This is 6
