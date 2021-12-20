@@ -6,14 +6,10 @@ nav_order: 1
 
 # Getting Started
 
+Install MadQt using PyPi from a command line.
+
 ```python
 pip install MadQt
-
-class MyClass(Gddf):
-    def __init__
-
-def method():
-    print('hello')
 ```
 
-And follow along with our main course on [YouTube](https://youtube.com/playlist?list=PLuvCsqbtUSFAEmez6Tuyi2KitVcS4fLWX)
+Check out our main course on [YouTube](https://youtube.com/playlist?list=PLuvCsqbtUSFAEmez6Tuyi2KitVcS4fLWX)
