@@ -34,4 +34,5 @@ Press the "Create Executable" button when ready.
 ![image](https://user-images.githubusercontent.com/30872066/146767933-cc3ae195-78cb-4737-a570-10ff87619107.png)
 
 
-When done it should display where it has been installed, navigate to the install folder and look for the executable file.
+When done it should display where it has been installed,\
+navigate to the install folder and look for the executable file.
