@@ -3,6 +3,7 @@ from MadQt.Qt.QtCore import *
 from MadQt.Qt.QtGui import *
 import PySide6, os, json, shutil, webbrowser, tempfile, subprocess, sys, fileinput
 import xml.etree.ElementTree as xml
+import MadQt
 from MadQt import Tools as Mt
 from MadQt import Templates
 from MadQt import Apps
@@ -763,6 +764,7 @@ class App(QMainWindow):
         os.chdir(managerFolder)
         madQtIcon = os.path.join(templateDir(),'NewProject','gui','logo.ico')
         arguments = F"pyinstaller "
+        arguments += F" --collect-all MadQt.Templates "
         arguments += self.ui.execArgs_2.text()
         arguments +=F" --name=MadQtProjectManager --icon {madQtIcon} main.py"
 
@@ -778,10 +780,13 @@ class App(QMainWindow):
                 os.remove(file)
                 break
         shutil.rmtree(os.path.join(managerFolder,'build'))
+
         src = os.path.join(managerFolder,'dist')
+        os.rename(src,os.path.join(managerFolder,'ProjectManager'))
+        src = os.path.join(managerFolder,'ProjectManager')
         dst = self.selectedPath
 
-        findAt = os.path.join(dst,'dist')
+        findAt = os.path.join(dst,'ProjectManager')
         if os.path.isdir(findAt):shutil.rmtree(findAt)
         shutil.move(src, dst, copy_function = shutil.copytree)
 
@@ -1646,7 +1651,7 @@ class App(QMainWindow):
             self.settings.setValue("usrInput/sublimePath", sp)
             self.ui.sublimePBtn.setStatusTip('Open sublime project')
             if self.project.valid:self.ui.sublimePBtn.setEnabled(1)
-        self.setMainPageIndex(2)
+        self.setMainPageIndex(None)
 
     def hasSublime(self):
         """returns sublime text is available"""
