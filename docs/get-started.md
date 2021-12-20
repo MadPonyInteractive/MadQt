@@ -25,11 +25,12 @@ in order to install MadQt.
 This dependencies will automatically be installed or updated once
 you install MadQt via pip.
 
-`Python >= 3.9
+```
+Python >= 3.9
 PySide6 >= 6.0.0
 Pillow >= 8.3.0
 pyinstaller >= 4.7
-`
+```
 
 #### Install via Pip
 Once you have Python and pip installed in your system you can
