@@ -10,9 +10,10 @@ nav_order: 1
 ***
 
 #### Creating new projects
-The first page you are presented with is the start page.
-Here you can create, add and remove projects.
-You can also drag and drop existing .mqpm files to add them to the list.
+The first page you are presented with is the start page.\
+Here you can create, add and remove projects.\
+You can also drag and drop existing .mqpm files to add them to the list.\
+To open an existing project simply double click on it.
 
 Press the "New Project" button to get started
 
@@ -20,7 +21,7 @@ Press the "New Project" button to get started
 
 Name your new project and select a folder to create it in.
 
-The "Icon" you select here will be used for the executable file.
+The "Icon" you select here will be used for the executable file.\
 You can select .png, .jpg, .gif files but the app will convert them to .ico format
 to make sure they can be used in your final application.
 
