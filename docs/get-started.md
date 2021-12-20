@@ -22,8 +22,8 @@ in order to install MadQt.
 [Installing Pip](https://pip.pypa.io/en/stable/installation/)
 
 ### Dependencies
-This dependencies will automatically be installed or updated once
-you install MadQt via pip.
+Apart from python the dependencies bellow will automatically be
+installed or updated once you install MadQt via pip.
 
 ```
 Python >= 3.9
