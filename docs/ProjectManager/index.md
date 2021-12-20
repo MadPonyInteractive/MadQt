@@ -20,5 +20,5 @@ and distribute PyQt apps faster.
 - Easy Sublime text integration
 
 
-### There's a [video on YouTube](https://www.youtube.com/watch?v=gCK_JRr0lGM) to help get you started.
+### There's a [video on YouTube](https://www.youtube.com/watch?v=gCK_JRr0lGM) to help you get started.
 [![MadQt Project Manager](https://img.youtube.com/vi/gCK_JRr0lGM/0.jpg)](https://www.youtube.com/watch?v=gCK_JRr0lGM)
