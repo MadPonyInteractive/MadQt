@@ -53,8 +53,8 @@ def uiClass(_class,_name):
 class Ui({_class}):
     def __init__(self):
         super().__init__()
-        ui = Ui_{_name}()
-        ui.setupUi(self)"""
+        self.ui = Ui_{_name}()
+        self.ui.setupUi(self)"""
 
 def customWidgetModule(_class,qt_class):
     return f"""from MadQt.Qt.QtWidgets import *
@@ -63,14 +63,14 @@ from MadQt.Qt.QtGui import *
 
 class {_class}({qt_class}):
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)"""
+        super().__init__(*args, **kwargs)"""
 
 def customWidgetClass(_class,qt_class):
     return f"""
 
 class {_class}({qt_class}):
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)"""
+        super().__init__(*args, **kwargs)"""
 
 
 class ThreadF(QThread):
@@ -214,7 +214,7 @@ class Project:
 
     def runApp(self):
         """run main.py"""
-        if not len(self.settings['uiFiles']):return False
+        if not len(self.settings['uiFiles']):return None
         os.chdir(self.devPath())
         subprocess.Popen(['python', 'main.py'],shell=True)
 
@@ -1441,8 +1441,9 @@ class App(QMainWindow):
                         userClass = line[start:end]
                         CustomWidgetClass(userClass, qtClass[0], moduleItem)
                         valueList.append({'class':userClass,'qt_class':qtClass[0]})
+        self.project.settings['customWidgets'][basename]=valueList
+        self.project.saveSett()
         if save:
-            self.project.settings['customWidgets'][basename]=valueList
             self.project.updateUis()
 
     def openModule(self,item):
@@ -1658,7 +1659,7 @@ class App(QMainWindow):
         return os.path.isdir(self.ui.sublimePathInput.text())
 
     def runApp(self):
-        if not self.project.runApp():
+        if self.project.runApp() is not None:
             self.ui.statusbar.showMessage('Cannot run, no Ui added yet!')
 
 def main():
