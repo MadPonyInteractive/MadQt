@@ -29,12 +29,12 @@ like Photoshop.
 ![image](https://user-images.githubusercontent.com/30872066/146853731-9f6ecaed-6f58-46f4-b4cd-ce76efb49634.png)
 
 
-## Right clicking on a image will give you extra options.\
+## Right clicking on a image will give you extra options.
 
 ### Tint and Multiply
 Tint and Multiply is very useful for when you have a group of icons you would like
 to change color to match your app. \
-Example: \
+Example:
 - Select multiple images
 - Right click on one the selected images
 - Select Multiply
