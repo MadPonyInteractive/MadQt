@@ -19,11 +19,11 @@ from MadQt import Apps
 # from MadQt.Apps.ProjectManager import resources_rc
 
 # To use only in development
-from pyside6_loader import PySide6Ui
-PySide6Ui('gui.ui').toPy()
-import gui
+# from pyside6_loader import PySide6Ui
+# PySide6Ui('gui.ui').toPy()
+# import gui
 
-# from MadQt.Apps.ProjectManager import gui
+from MadQt.Apps.ProjectManager import gui
 
 
 def pySideDir():
