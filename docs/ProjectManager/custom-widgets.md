@@ -27,6 +27,8 @@ and the app will automatically detect promote able classes and display them.
 Keep in mind that when editing your modules you will need to press the "Refresh" button
 to see your changes reflected in Project Manager.
 
+***
+
 Another way to add custom widget modules is by simply clicking on the "New Module" button.\
 This will take you to the "New Custom Widget" page where you can
 create .py template files for you to get started coding your subclass.
