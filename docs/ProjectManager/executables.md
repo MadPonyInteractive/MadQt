@@ -18,7 +18,7 @@ paths and files that should have been included.
 
 Navigate to the Executable page within your project
 
-img
+![image](https://user-images.githubusercontent.com/30872066/146863044-1c794b83-3d56-4d32-ade9-1a3a02c27a0b.png)
 
 Notice the "Arguments" field already containing some popular arguments for pyinstaller.\
 You can edit this as you wish.
