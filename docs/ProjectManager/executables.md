@@ -6,7 +6,7 @@ nav_order: 6
 ---
 
 # Creating an Executable
-This is really a simply process but depending on what you do in your code
+This is really a simple process but depending on what you do in your code
 it can go very wrong.
 
 Note:
