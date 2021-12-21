@@ -280,7 +280,7 @@ if FRAMEWORK in [PYQT5, PYQT6, PYSIDE2, PYSIDE6]:
 
         def scale(self, *args):
             warnings.warn(
-                "Deprecated Qt API, will be removed in 0.13.0.",
+                "Deprecated Qt API, will be removed",
                 DeprecationWarning, stacklevel=2
             )
             if args:
@@ -294,7 +294,7 @@ if FRAMEWORK in [PYQT5, PYQT6, PYSIDE2, PYSIDE6]:
 
         def rotate(self, angle):
             warnings.warn(
-                "Deprecated Qt API, will be removed in 0.13.0.",
+                "Deprecated Qt API, will be removed",
                 DeprecationWarning, stacklevel=2
             )
             tr = self.transform()
@@ -304,7 +304,7 @@ if FRAMEWORK in [PYQT5, PYQT6, PYSIDE2, PYSIDE6]:
 
         def translate(self, dx, dy):
             warnings.warn(
-                "Deprecated Qt API, will be removed in 0.13.0.",
+                "Deprecated Qt API, will be removed",
                 DeprecationWarning, stacklevel=2
             )
             tr = self.transform()
@@ -314,7 +314,7 @@ if FRAMEWORK in [PYQT5, PYQT6, PYSIDE2, PYSIDE6]:
 
         def setMargin(self, i):
             warnings.warn(
-                "Deprecated Qt API, will be removed in 0.13.0.",
+                "Deprecated Qt API, will be removed",
                 DeprecationWarning, stacklevel=2
             )
             self.setContentsMargins(i, i, i, i)
@@ -322,7 +322,7 @@ if FRAMEWORK in [PYQT5, PYQT6, PYSIDE2, PYSIDE6]:
 
         def setResizeMode(self, *args):
             warnings.warn(
-                "Deprecated Qt API, will be removed in 0.13.0.",
+                "Deprecated Qt API, will be removed",
                 DeprecationWarning, stacklevel=2
             )
             self.setSectionResizeMode(*args)

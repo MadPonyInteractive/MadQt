@@ -11,7 +11,7 @@ from MadQt import Apps
 # give this to users for them to create a shortcut
 # https://pypi.org/project/psgshortcut/
 
-# pyside6-uic main.ui -o main.py
+# pyside6-uic gui.ui -o gui.py
 # pyside6-rcc resources.qrc -o resources_rc.py
 
 # to gui.py
@@ -19,9 +19,12 @@ from MadQt import Apps
 # from MadQt.Apps.ProjectManager import resources_rc
 
 # To use only in development
-# from pyside6_loader import PySide6Ui
-# PySide6Ui('gui.ui').toPy()
-from MadQt.Apps.ProjectManager import gui
+from pyside6_loader import PySide6Ui
+PySide6Ui('gui.ui').toPy()
+import gui
+
+# from MadQt.Apps.ProjectManager import gui
+
 
 def pySideDir():
     """returns the path to PySide6"""
@@ -352,12 +355,15 @@ class Project:
         self.updateUis()
         return True
 
-    def createQrc(self):
+    def createQrc(self,qrcName='resources.qrc'):
         """copies an empty qrc file from templates/Uis"""
+        if qrcName in self.settings['qrcFiles']:
+            pName,_=os.path.splitext(qrcName)
+            qrcName = qrcName.replace(pName,pName+'_2')
         source_dir = os.path.join(templateDir(),'Uis','resources.qrc')
-        shutil.copyfile(source_dir, self.guiFile('resources.qrc'))
-        self.addQrc('resources.qrc')
-        return self.guiFile('resources.qrc')
+        shutil.copyfile(source_dir, self.guiFile(qrcName))
+        self.addQrc(qrcName)
+        return self.guiFile(qrcName)
 
 class ProjectItem(QListWidgetItem):
     def __init__(self,file):
@@ -460,6 +466,7 @@ class App(QMainWindow):
         return wrapp
 
     def refresh(self):
+        self.setCursor(Qt.WaitCursor)
         self.ui.statusbar.showMessage('Refreshing...')
         prevPF = self.project
         self.project = Project()
@@ -467,6 +474,7 @@ class App(QMainWindow):
         self.project = prevPF
         self.openProject()
         self.ui.statusbar.showMessage('Project refreshed!')
+        self.setCursor(Qt.ArrowCursor)
 
     def initSettings(self):
         self.settings = QSettings("Mad Pony Interactive", "MadQt | Project Manager")
@@ -492,6 +500,10 @@ class App(QMainWindow):
         """open previous page if i == None"""
         i = self.prevMainPageindex if i is None else i
         self.prevMainPageindex = self.ui.mainPage.currentIndex()
+        if i == 0:
+            self.ui.startPageBtn.setChecked(1)
+        elif i == 2:
+            self.ui.PpageBtn.setChecked(1)
         self.ui.mainPage.setCurrentIndex(i)
 
     def saveWindowSettings(self):
@@ -658,12 +670,18 @@ class App(QMainWindow):
         self.ui.QtDesignerPathInput.setText(self.settings.value("usrInput/designerPath", default_qtPath))
         self.ui.sublimePathInput.setText(self.settings.value("usrInput/sublimePath", ''))
 
+        self.ui.icoSizeCb.setCurrentText(self.settings.value("usrInput/icoSize",str(64)))
+        def changedIco(v): self.settings.setValue("usrInput/icoSize",v)
+        self.ui.icoSizeCb.currentTextChanged.connect(changedIco)
+
         self.ui.QtDesignerPathBtn.clicked.connect(lambda: self.openFolder(self.ui.QtDesignerPathInput))
         self.ui.sublimePathBtn.clicked.connect(lambda: self.openFolder(self.ui.sublimePathInput))
 
         self.ui.SettDoneBtn.clicked.connect(lambda: self.setMainPageIndex(None))
         self.ui.saveSett.clicked.connect(self.saveUserSettings)
 
+        if os.path.basename(__file__)!='main.py':
+            self.ui.createMQEXEC.hide()
         self.ui.createMQEXEC.clicked.connect(self.openMQEXEC)
         self.ui.createExecBtn_2.clicked.connect(self.createMQEXEC)
 
@@ -735,6 +753,7 @@ class App(QMainWindow):
         self.ui.pyinstallerHelp_2.clicked.connect(lambda:\
          webbrowser.open('https://pyinstaller.readthedocs.io/en/stable/when-things-go-wrong.html'))
 
+    # pyinstaller
     def openMQEXEC(self):
         #folder select
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -877,7 +896,7 @@ class App(QMainWindow):
             if ico:
                 if '.ico' not in file:
                     dest_ico = os.path.join(tempDir(),'logo.ico')
-                    file = Mt.createIco(file,dest_ico)
+                    file = Mt.createIco(file,dest_ico,self.defaultIcoSize())
             widget.setPixmap(QPixmap(file))
             self.selectedFile = file
             # self.settings.setValue("usrInput/newProjectIcon", directory)
@@ -961,13 +980,19 @@ class App(QMainWindow):
         """Add and open a project from an existing file"""
         file = self.openFile('MadQt Project Files (*.mqpm)')[0]\
          if not file else file
+        if not len(file):return
 
-        if len(file):
-            if not file.endswith('mqpm'):
-                self.extraMsg('Not a valid project file!')
-                return
-            self.project = Project(file)
-            self.addProject(save=True)
+        if not file.endswith('mqpm'):
+            self.extraMsg('Not a valid project file!')
+            return
+
+        # Update folder path
+        prevSettings = {}
+        with open(file, "r") as f: prevSettings = json.loads(f.read())
+        prevSettings['folder'] = os.path.dirname(file)
+        with open(file, "w") as f: json.dump(prevSettings, f, indent=4)
+
+        self.addProject(file,True)
 
     def createNewProject(self):
         name = self.ui.projectNameInput.text()
@@ -976,8 +1001,9 @@ class App(QMainWindow):
             self.ui.statusbar.showMessage('Provided path not found!',5000)
             return
         name = 'New MadQt project' if not name else name.strip()
-
         self.settings.setValue("usrInput/newProjectDir", folder)
+
+        folder = os.path.join(folder,Mt.cleanString(name))
 
         ico = os.path.join(templateDir(),'NewProject','gui','logo.ico')
         if self.selectedFile is not None:
@@ -1024,10 +1050,10 @@ class App(QMainWindow):
         if item:
             # Avoid re-opening same project
             if item.file == self.project.file():
-                self.ui.PpageBtn.setChecked(True)
                 self.setMainPageIndex(2)
                 return
             self.project = Project(item.file)
+        self.setCursor(Qt.WaitCursor)
 
         self.ui.qrcTree.clear()
         self.ui.moduleTree.clear()
@@ -1054,12 +1080,24 @@ class App(QMainWindow):
 
         self.setMainPageIndex(2)
         self.ui.statusbar.showMessage(f'{self.project.name} project loaded!')
+        self.setCursor(Qt.ArrowCursor)
 
     def openProjectFolder(self):
         # Open base on project page
         Mt.openFileExplorer(self.project.folder)
 
     # Qrc Methods
+    def createQrc(self):
+        qrcName = self.labelBox("New Qrc name:",'resources.qrc')
+        if not qrcName:return
+        self.setCursor(Qt.WaitCursor)
+        if '.' not in qrcName: qrcName = qrcName + '.qrc'
+        fn,ext=os.path.splitext(qrcName)
+        qrcName=Mt.cleanString(fn,True)+ext
+        qrcFile = self.project.createQrc(qrcName)
+        self.addQrc(qrcFile)
+        self.setCursor(Qt.ArrowCursor)
+
     def addQrc(self,file=None,save=False):
         """
             Adds qrc files, prefixes and images
@@ -1215,7 +1253,6 @@ class App(QMainWindow):
 
             dest_img = self.project.guiFile(fE.text)
             shutil.copy2(img,dest_img)
-            # Mt.tintImage(dest_img,(0,255,0))
             img=dest_img
 
             self.project.updateUis()
@@ -1247,7 +1284,7 @@ class App(QMainWindow):
                 base = os.path.basename(img.file)
                 fname,_=os.path.splitext(base)
                 dest_ico = os.path.join(tempDir(),fname+'.ico')
-                Mt.createIco(img.file,dest_ico)
+                Mt.createIco(img.file,dest_ico,self.defaultIcoSize())
                 self.addImage(dest_ico,img.parent(),img.parent().parent(),True)
 
     @thread
@@ -1652,6 +1689,7 @@ class App(QMainWindow):
             self.settings.setValue("usrInput/sublimePath", sp)
             self.ui.sublimePBtn.setStatusTip('Open sublime project')
             if self.project.valid:self.ui.sublimePBtn.setEnabled(1)
+
         self.setMainPageIndex(None)
 
     def hasSublime(self):
@@ -1661,6 +1699,10 @@ class App(QMainWindow):
     def runApp(self):
         if self.project.runApp() is not None:
             self.ui.statusbar.showMessage('Cannot run, no Ui added yet!')
+
+    def defaultIcoSize(self):
+        size = int(self.settings.value("usrInput/icoSize",str(64)))
+        return [(size,size)]
 
 def main():
     app = QApplication(sys.argv)

@@ -184,6 +184,7 @@ class TreeView(QTreeWidget,DragDrop):
         self.menu.addAction(folderIcon,'Add Images',self.mainWindow.addImagesDialogue)
         self.menu.addAction(folderIcon,'Add Prefix',self.mainWindow.addPrefix)
         self.menu.addAction(folderIcon,'Add Qrc',self.mainWindow.addQrc)
+        self.menu.addAction(folderIcon,'Create Qrc',self.mainWindow.createQrc)
         self.menu.addAction(pencilIcon,'Tint',self.tint)
         self.menu.addAction(pencilIcon,'Multiply',self.multiply)
         self.menu.addAction(refreshIcon,'Restore',self.restore)
@@ -284,8 +285,6 @@ class TreeView(QTreeWidget,DragDrop):
                 if underMouse.type()==2:# image
                     self.popup = 'image'
                     self.visibleActions([
-                        'Tint',
-                        'Multiply',
                         'Restore',
                         'Rename',
                         'Delete',
@@ -293,13 +292,16 @@ class TreeView(QTreeWidget,DragDrop):
                     # if any image is tinted enable undo tint
                     self.enableActions(['Restore'],0)
                     for img in self.selectedImages():
-                        if img.tinted:
-                            self.enableActions(['Restore'])
-                            break
                         if '.ico' in img.file:
                             self.visibleActions(['Set as project icon'])
                         else:
-                            self.visibleActions(['Make ICO'])
+                            self.visibleActions([
+                                'Tint',
+                                'Multiply',
+                                'Make ICO'
+                            ])
+                        if img.tinted:
+                            self.enableActions(['Restore'])
                 elif underMouse.type()==1:# prefix
                     self.popup = 'prefix'
                     self.visibleActions([
@@ -316,7 +318,7 @@ class TreeView(QTreeWidget,DragDrop):
                     ])
             else:# empty
                 self.popup = None
-                self.visibleActions(['Add Qrc'])
+                self.visibleActions(['Add Qrc','Create Qrc'])
         else:# moduleTree
             if underMouse:
                 if underMouse.type()==1:# class

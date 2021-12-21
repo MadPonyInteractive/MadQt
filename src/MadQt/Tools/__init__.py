@@ -103,6 +103,7 @@ def tintImage(image, tint_color, _type=0):
         if _type == 0 and img.mode == 'RGBA':
             img=ImageChops.composite(Image.new(img.mode, img.size, tint_color),Image.new(img.mode, img.size, (0,0,0,0)), img)
         else:
+            img = img.convert('RGBA')# windows fix
             img=ImageChops.multiply(img, Image.new(img.mode, img.size, tint_color))
         img.save(image)
 
@@ -158,7 +159,7 @@ def QDesignerBaseClasses():
         'QTreeView',
         'QTreeWidget',
         'QUndoView',
-        'QWebEngineView',
+        # 'QWebEngineView',
         'QWidget',
         'QWizard',
         'QWizardPage',

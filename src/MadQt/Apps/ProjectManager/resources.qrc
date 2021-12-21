@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>img/mpi_logo.ico</file>
     <file>img/mpi_logo_small.png</file>
     <file>img/mpi_logo.png</file>
     <file>img/mpi_logo_icon.ico</file>
