@@ -10,13 +10,13 @@ The Ui files project page is where you can manage your project QDesigner Ui file
 You can drag and drop ui files into this page but keep in mind that any qrc and
 custom widget references will be replaced with the project qrc files and promoted widgets.
 
-img
+![image](https://user-images.githubusercontent.com/30872066/146858067-7c3db91f-829e-41bb-acb0-bd7682de58e1.png)
 
 ### Creating QDesigner Uis
 Pressing the "New Ui" button will take you to the New Ui page.\
 Here you can create QDesigner startup uis that inherit from QMainWindow or QWidget.
 
-img
+![image](https://user-images.githubusercontent.com/30872066/146858108-df0c359b-26de-4842-8587-7b1b20c59d33.png)
 
 When a project is first created, it creates a file named main.py found in the dev folder.\
 This file contains some information and starter code to run your app right out of the box.\
@@ -55,7 +55,7 @@ ready_to_go_ui.pushButton.clicked.connect()
 Once you have Uis populating your ui page, you can double click to open
 them in QDesigner or drag drop them into QDesigner(faster).
 
-img
+![QDesnMadQt](https://user-images.githubusercontent.com/30872066/146858156-83f69b13-1cd5-4565-b8be-6c46fa49c5cb.png)
 
 When you make changes in QDesigner and come back to MadQt Project Manager\
 you should press the "Refresh" button to have those changes reflected.
