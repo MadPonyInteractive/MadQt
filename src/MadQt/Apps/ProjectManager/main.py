@@ -25,7 +25,6 @@ from MadQt import Apps
 
 from MadQt.Apps.ProjectManager import gui
 
-
 def pySideDir():
     """returns the path to PySide6"""
     return os.path.dirname(PySide6.__file__)
@@ -665,7 +664,7 @@ class App(QMainWindow):
 
     def initUi(self):
         self.ui.header.installEventFilter(self)
-        self.ui.statusbar.insertPermanentWidget(0,QLabel('V.0.0.1'),0)
+        self.ui.statusbar.insertPermanentWidget(0,QLabel('V.0.0.2'),0)
 
         # Start Page
         self.ui.startPageBtn.clicked.connect(lambda: self.setMainPageIndex(0))
