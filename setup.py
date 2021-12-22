@@ -5,8 +5,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.20',
-    description='Tutorials and Tools for PyQt and PySide',
+    version='0.0.21',
+    description='Tutorials and Tools for PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url='https://github.com/MadPonyInteractive/MadQt',

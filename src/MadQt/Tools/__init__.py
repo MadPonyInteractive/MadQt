@@ -1,4 +1,4 @@
-""" MadQt - Tutorials and Tools for PyQt and PySide
+""" MadQt - Tutorials and Tools for PySide
 
     All the Code in this package can be used freely for personal and
     commercial projects under a MIT License but remember that because
@@ -74,8 +74,9 @@ from __future__ import absolute_import
 import sys, os, subprocess, fileinput, platform, io
 from PIL import Image, ImageChops
 import xml.etree.ElementTree as xml
-from MadQt.Qt.QtWidgets import QApplication, QMainWindow, QWidget
-from MadQt.Qt.QtCore import QDir
+from PySide6.QtUiTools import loadUiType
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
+from PySide6.QtCore import QDir
 import MadQt
 
 def createIco(file_in,file_out=None,sizes=[(32,32)]):
@@ -159,7 +160,7 @@ def QDesignerBaseClasses():
         'QTreeView',
         'QTreeWidget',
         'QUndoView',
-        # 'QWebEngineView',
+        'QWebEngineView',
         'QWidget',
         'QWizard',
         'QWizardPage',
@@ -360,12 +361,8 @@ def compileUi(ui_file,py_file=None):
 
     ui_file = cleanQrc(ui_file)
 
-    if 'PyQt' in MadQt.Qt.FRAMEWORK:
-        uipy = subprocess.check_output(['pyuic'+MadQt.Qt.FRAMEWORK[-1], '-o', ui_file],\
-         shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    else:
-        uipy = subprocess.check_output([MadQt.Qt.FRAMEWORK.lower() + '-uic', ui_file],\
-         shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    uipy = subprocess.check_output(['pyside6-uic', ui_file],
+        shell=True, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 
     if '_mpi.ui' in ui_file:
         py_file = py_file or ui_file.replace('_mpi.ui','.py')
@@ -448,7 +445,7 @@ def getFiles(*args, **kwargs):
 def loadUi(ui,win=None):
     win_provided = win is not None
     ui = cleanQrc(ui)
-    setup_class, window_class = MadQt.Qt.loadUiType(ui)
+    setup_class, window_class = loadUiType(ui)
     win = win or window_class()
     setup = setup_class()
     setup.setupUi(win)
@@ -459,15 +456,9 @@ def loadUi(ui,win=None):
 
 def compileUiSimple(ui_file,py_file=None):
     if not isFile(ui_file):
-        raise ValueError('MadQt.Tools.compileUi: Provided .ui file not found!')
-
+        raise ValueError('MadQt.Tools.compileUiSimple: Provided .ui file not found!')
     py_file = ui_file.replace('.ui','.py') if not py_file else py_file
-
-    if 'PyQt' in MadQt.Qt.FRAMEWORK:
-        subprocess.Popen(['pyuic'+MadQt.Qt.FRAMEWORK[-1], ui_file, '-o', py_file],shell=True).wait()
-    else:
-        subprocess.Popen([MadQt.Qt.FRAMEWORK.lower() + '-uic', ui_file, '-o', py_file],shell=True).wait()
-
+    subprocess.Popen(['pyside6-uic', ui_file, '-o', py_file],shell=True).wait()
     return py_file
 
 def compileQrc(qrc,dest_dir=None,overwrite=True):
@@ -532,7 +523,8 @@ class App:
         self.qrc = qrc
 
         # init
-        self.app = MadQt.Qt.mkApp(self.name)
+        self.app = QApplication.instance()
+        self.app.setApplicationName(self.name)
 
         if self.qrc:
             if not isFile(self.qrc):

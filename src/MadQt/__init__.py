@@ -1,4 +1,4 @@
-""" MadQt - Tutorials and Tools for PyQt and PySide
+""" MadQt - Tutorials and Tools for PySide
 
     All the Code in this package can be used freely for personal and
     commercial projects under a MIT License but remember that because
@@ -71,10 +71,19 @@
     ## $QT_END_LICENSE$
 """
 from __future__ import absolute_import
-from MadQt.Qt import FRAMEWORK, QDESIGNER_PLUGIN_PATHS
-from MadQt.Tools import App
+import os
+# Setup QDesigner Plugin Paths
+MadQdPlugins_path = os.getcwd()
+MadQdPlugins_path = os.path.join(MadQdPlugins_path,'QtDesignerPlugins')
+QdPlugins_path = os.getenv("PYSIDE_DESIGNER_PLUGINS")
+if QdPlugins_path is not None:
+    if MadQdPlugins_path not in QdPlugins_path:
+        os.environ["PYSIDE_DESIGNER_PLUGINS"] += os.pathsep + MadQdPlugins_path
+else:
+    os.environ["PYSIDE_DESIGNER_PLUGINS"] = MadQdPlugins_path
+QDESIGNER_PLUGIN_PATHS = os.getenv("PYSIDE_DESIGNER_PLUGINS")
+# print(QDESIGNER_PLUGIN_PATHS)
 
-__all__ = ["Qt", "App"]
-__version__ = "0.0.20"
+__version__ = "0.0.21"
 __author__ = 'Fabio Goncalves'
 __credits__ = 'Riverbank Computing'

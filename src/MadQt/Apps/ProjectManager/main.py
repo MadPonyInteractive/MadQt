@@ -1,6 +1,6 @@
-from MadQt.Qt.QtWidgets import *
-from MadQt.Qt.QtCore import *
-from MadQt.Qt.QtGui import *
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
 import PySide6, os, json, shutil, webbrowser, tempfile, subprocess, sys, fileinput
 import xml.etree.ElementTree as xml
 import MadQt
@@ -51,18 +51,10 @@ def tempDir():
     if not os.path.isdir(temp_dir): os.mkdir(temp_dir)
     return temp_dir
 
-def uiClass(_class,_name):
-    return f"""
-class Ui({_class}):
-    def __init__(self):
-        super().__init__()
-        self.ui = Ui_{_name}()
-        self.ui.setupUi(self)"""
-
 def customWidgetModule(_class,qt_class):
-    return f"""from MadQt.Qt.QtWidgets import *
-from MadQt.Qt.QtCore import *
-from MadQt.Qt.QtGui import *
+    return f"""from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
 
 class {_class}({qt_class}):
     def __init__(self, *args, **kwargs):
@@ -274,6 +266,19 @@ class Project:
         _class = parsed.find('widget').get('class')#ex: QMainWindow
         _name = parsed.find('widget').get('name')#ex: MainWindow
 
+        # Signals and slots
+        _signals = []
+        _slots = []
+        slotsElem = parsed.find('slots')
+        if slotsElem:
+            for s in slotsElem.findall('signal'):
+                sig_name = s.text[:s.text.index('(')]
+                sig_args = s.text[s.text.index('(')+1:s.text.index(')')]
+                _signals.append((sig_name,sig_args))
+            for s in slotsElem.findall('slot'):
+                slot_name = s.text[:s.text.index('(')]
+                _slots.append(slot_name)
+
         # Add custom widgets to ui
         widgetsElem = parsed.find('customwidgets')
         # ui has custom widgets > remove them
@@ -311,7 +316,14 @@ class Project:
 
         # Add Ui class to compiled py file
         with open(py_file,"a") as f:
-          f.write(uiClass(_class,_name))
+            if len(_signals):f.write(F"from PySide6.QtCore import Signal\n")
+            f.write(F"class Ui({_class}):\n")
+            [f.write(F"    {sig[0]} = Signal({sig[1]})\n") for sig in _signals]
+            f.write(F"    def __init__(self):\n")
+            f.write(F"        super().__init__()\n")
+            f.write(F"        self.ui = Ui_{_name}()\n")
+            f.write(F"        self.ui.setupUi(self)\n")
+            [f.write(F"    def {slot}(self,*a,**kw):pass\n") for slot in _slots]
 
     def addUi(self,file):
         """
