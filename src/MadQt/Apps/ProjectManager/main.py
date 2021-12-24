@@ -13,8 +13,8 @@ from MadQt import Tools as Mt
 # pyside6-rcc resources.qrc -o resources_rc.py
 
 # To use only in development
-from pyside6_loader import PySide6Ui
-PySide6Ui('gui.ui').toPy()
+# from pyside6_loader import PySide6Ui
+# PySide6Ui('gui.ui').toPy()
 
 import gui
 # Globals
