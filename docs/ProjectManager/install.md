@@ -21,18 +21,21 @@ You should see the MadQt Project Manager
 ![image](https://user-images.githubusercontent.com/30872066/146767192-5e3f2ad9-58d3-444c-a39a-3deb8d576b02.png)
 
 
-### Press the Settings tab and click on "Create Executable Version"
-Choose a directory for installation
+### Create a shortcut for Windows
 
-![image](https://user-images.githubusercontent.com/30872066/146767548-757fcc44-2b01-410f-ba1d-8288623dc15e.png)
-
-### You will be presented with the pyinstaller interface to install the app
-You can add argumments to the "Argumments" edit box like --one-file 
-
-Press the "Create Executable" button when ready.
-
-![image](https://user-images.githubusercontent.com/30872066/146767933-cc3ae195-78cb-4737-a570-10ff87619107.png)
-
-
-When done it should display where it has been installed,\
-navigate to the install folder and look for the executable file.
+1 - Create a new file in a text and paste the following code
+```python
+@echo off
+MadQtProjectManager
+```
+2 - Save the file as project_manager.bat
+3 - Right click on the file and select "Create Shortcut"\
+    Alternatively you can drag and drop the file holding \
+    the Atl key to automatically create the shortcut\
+4 - Right click on the shortcut and select properties
+5 - In the Run: field select Minimized
+6 - Click the "Advanced" button
+7 - Check Run as administrator
+8 - Press Ok
+9 - Press Apply
+10 - Press Ok
