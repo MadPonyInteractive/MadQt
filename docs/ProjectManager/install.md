@@ -28,14 +28,14 @@ You should see the MadQt Project Manager
 @echo off
 MadQtProjectManager
 ```
-2 - Save the file as project_manager.bat
+2 - Save the file as project_manager.bat\
 3 - Right click on the file and select "Create Shortcut"\
     Alternatively you can drag and drop the file holding \
     the Atl key to automatically create the shortcut\
-4 - Right click on the shortcut and select properties
-5 - In the Run: field select Minimized
-6 - Click the "Advanced" button
-7 - Check Run as administrator
-8 - Press Ok
-9 - Press Apply
+4 - Right click on the shortcut and select properties\
+5 - In the Run: field select Minimized\
+6 - Click the "Advanced" button\
+7 - Check Run as administrator\
+8 - Press Ok\
+9 - Press Apply\
 10 - Press Ok
