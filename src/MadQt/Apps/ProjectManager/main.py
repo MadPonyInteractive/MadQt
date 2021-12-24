@@ -5,8 +5,6 @@ import PySide6, os, json, shutil, webbrowser, tempfile, subprocess, sys, fileinp
 import xml.etree.ElementTree as xml
 import MadQt
 from MadQt import Tools as Mt
-from MadQt import Templates
-from MadQt import Apps
 
 # give this to users for them to create a shortcut
 # https://pypi.org/project/psgshortcut/
@@ -14,28 +12,18 @@ from MadQt import Apps
 # pyside6-uic gui.ui -o gui.py
 # pyside6-rcc resources.qrc -o resources_rc.py
 
-# to gui.py
-# from MadQt.Apps.ProjectManager.myWidgets import (JumpButton, ListView, ToolButton, TreeView)
-# from MadQt.Apps.ProjectManager import resources_rc
-
 # To use only in development
-# from pyside6_loader import PySide6Ui
-# PySide6Ui('gui.ui').toPy()
-# import gui
+from pyside6_loader import PySide6Ui
+PySide6Ui('gui.ui').toPy()
 
-from MadQt.Apps.ProjectManager import gui
+import gui
+# Globals
+MadQt_Designer_Paths = []
+window = None
 
 def pySideDir():
     """returns the path to PySide6"""
     return os.path.dirname(PySide6.__file__)
-
-def appDir():
-    """returns the path to the app directory"""
-    return os.path.dirname(Apps.__file__)
-
-def templateDir():
-    """returns the path to the templates directory"""
-    return os.path.dirname(Templates.__file__)
 
 def isTemp(path):
     temp_dir = os.path.join(tempfile.gettempdir(),'MadQt')
@@ -119,7 +107,7 @@ class Project:
                 widgets
                     *.py
     """
-    def __init__(self,name:str='',folder:str=None,icon:str=None):
+    def __init__(self,name='',folder=None,icon=None):
         self.valid=False
         if '.mqpm' in name:
             self.loadSett(name)
@@ -132,7 +120,7 @@ class Project:
     def create(self,icon):
         """creates a new project"""
         # Copy files in template folder to self.folder/dev
-        source_dir = os.path.join(templateDir(),'NewProject')
+        source_dir = os.path.join(MadQt.get_path('Templates'),'NewProject')
         if os.path.isdir(self.devPath()):return False
         # copy template folder
         shutil.copytree(source_dir, self.devPath(), ignore=shutil.ignore_patterns('*.ico'))
@@ -237,7 +225,6 @@ class Project:
         """returns generator with full path to customWidgets module files"""
         return (self.widgetFile(cw) for cw in self.settings['customWidgets'].keys())
 
-    # def updateUi(self):
     def updateUi(self,ui_file):
         """
             Updates ui custom widgets and qrc files
@@ -250,79 +237,76 @@ class Project:
                         ui = Ui_MainWindow()
                         ui.setupUi(self)
         """
-        ui_file = self.guiFile(ui_file)
-        # print("Updating ",ui_file)
+        plugin_locations = MadQt_Designer_Paths
+        widget_folder = os.path.join(self.devPath(),'widgets')
+        plugin_locations.append(widget_folder)
+        ui = Mt.Ui(ui_file,plugin_locations)
 
-        # Remove existing Qrc resources
-        Mt.removeQrcs(ui_file)
+        # add qrc resources
+        for qrc in self.settings['qrcFiles']: ui.add_qrc(qrc)
 
-        # Add qrc to ui and compile them
-        for qrc in self.settings['qrcFiles']:
-            Mt.addQrc(qrc,ui_file)
-            self.compileQrc(qrc)
-
-        parsed = xml.parse(ui_file)
-        _class = parsed.find('widget').get('class')#ex: QMainWindow
-        _name = parsed.find('widget').get('name')#ex: MainWindow
-
-        # Signals and slots
-        _signals = []
-        _slots = []
-        slotsElem = parsed.find('slots')
-        if slotsElem:
-            for s in slotsElem.findall('signal'):
-                sig_name = s.text[:s.text.index('(')]
-                sig_args = s.text[s.text.index('(')+1:s.text.index(')')]
-                _signals.append((sig_name,sig_args))
-            for s in slotsElem.findall('slot'):
-                slot_name = s.text[:s.text.index('(')]
-                _slots.append(slot_name)
-
-        # Add custom widgets to ui
-        widgetsElem = parsed.find('customwidgets')
-        # ui has custom widgets > remove them
-        if widgetsElem: parsed.getroot().remove(widgetsElem)
-        # append user widgets
-        widgetsElem = xml.Element('customwidgets')
+        # add promoted widgets
         for mod, classes in self.settings['customWidgets'].items():
             for cD in classes:
-                newCWElem = xml.Element('customwidget')
-                newClassElem = xml.Element('class')
-                newExtendsElem = xml.Element('extends')
-                newHeaderElem = xml.Element('header')
-                newClassElem.text=cD['class']
-                newExtendsElem.text=cD['qt_class']
-                newHeaderElem.text=mod.replace('.py','.h')
-                newCWElem.append(newClassElem)
-                newCWElem.append(newExtendsElem)
-                newCWElem.append(newHeaderElem)
-                widgetsElem.append(newCWElem)
-        if len(self.settings['customWidgets']):parsed.getroot().append(widgetsElem)# append
-        xml.indent(parsed.getroot())# prettify
-        parsed.write(ui_file,xml_declaration=True, encoding='UTF-8')# save
+                ui.add_custom_widget(cD['class'],cD['qt_class'],mod.replace('.py','.h'))
 
-        # Compile ui to py file
-        py_file = Mt.compileUiSimple(ui_file)
+        # save/overwrite ui to place qrc includes and custom widgets
+        ui.save()
 
-        # Rename all user widgets paths
+        # close to compile qrc files and a py
+        # version that will work right off the box
+        close_dict = ui.close()
+
+        # Copy plugins that were found in our paths
+        # but are not importable to widgets folder
+        for plugin_mod in close_dict['in_paths']:
+            py_name = plugin_mod+'.py'
+            # already in widgets folder
+            if os.path.isfile(self.widgetFile(py_name)):continue
+            for path in plugin_locations:
+                # don't check widgets folder
+                if path == widget_folder: continue
+                for file in os.listdir(path):
+                    if file == py_name:
+                        src = os.path.join(path,file)
+                        dst = os.path.join(widget_folder,file)
+                        shutil.copy2(src,dst)
+
+        # add widget folder to widgets imports
         # from myWidgets >> from widgets.myWidgets
-        for line in fileinput.input(py_file, inplace=1):
-            for cw in self.settings['customWidgets'].keys():
-                customWidget = cw.replace('.py','')
-                if customWidget in line:
-                    line = line.replace(customWidget, 'widgets.'+customWidget)
+        from_widgets = close_dict['promoted_widgets']+close_dict['in_paths']
+        for line in fileinput.input(close_dict['compiled_file'], inplace=1):
+            for cw in from_widgets:
+                if f'from {cw} import ' in line:
+                    line = line.replace(cw, 'widgets.'+cw)
             sys.stdout.write(line)
 
-        # Add Ui class to compiled py file
-        with open(py_file,"a") as f:
-            if len(_signals):f.write(F"from PySide6.QtCore import Signal\n")
-            f.write(F"class Ui({_class}):\n")
-            [f.write(F"    {sig[0]} = Signal({sig[1]})\n") for sig in _signals]
-            f.write(F"    def __init__(self):\n")
-            f.write(F"        super().__init__()\n")
-            f.write(F"        self.ui = Ui_{_name}()\n")
-            f.write(F"        self.ui.setupUi(self)\n")
-            [f.write(F"    def {slot}(self,*a,**kw):pass\n") for slot in _slots]
+        # inform user of removed plugins and widgets
+        if close_dict['removed_plugins']:
+
+            msg = F"Missing plugins in '{os.path.basename(ui_file)}' \n\n"
+
+            msg += F"The following plugins were removed: \n"
+            for rp in close_dict['removed_plugins']:
+                msg += F"- class:{rp['class']} | module:{rp['module']}\n"
+            msg += F"As a consequence, widgets were removed: \n"
+            for rw in close_dict['removed_widgets']:
+                msg += F"- {rw['name']} \n"
+
+            msg += F"\nQtDesigner plugins must be present either in\n"
+            msg += F"Plugin Paths(in settings) or in the dev/widgets folder! \n\n"
+
+            msg += F"To stop receiving this message: \n"
+            msg += F"- ADD MISSING PLUGINS TO PLUGIN/DEV/WIDGETS \n"
+            msg += F"or\n"
+            msg += F"- ADD THE PLUGINS DIRECTORIES TO PLUGIN PATHS \n"
+            msg += F"or\n"
+            msg += F"- REMOVE MISSING PLUGINS FROM UI"
+            reply = QMessageBox.information(
+                window,
+                "Could not import or find plugins!",
+                msg
+            )
 
     def addUi(self,file):
         """
@@ -357,7 +341,7 @@ class Project:
 
     def updateUis(self):
         """updates all UIs"""
-        [self.updateUi(ui) for ui in self.settings['uiFiles']]
+        [self.updateUi(ui) for ui in self.uiFiles()]
         self.saveSett()
 
     def addQrc(self,basename):
@@ -371,7 +355,7 @@ class Project:
         if qrcName in self.settings['qrcFiles']:
             pName,_=os.path.splitext(qrcName)
             qrcName = qrcName.replace(pName,pName+'_2')
-        source_dir = os.path.join(templateDir(),'Uis','resources.qrc')
+        source_dir = os.path.join(MadQt.get_path('Templates'),'Uis','resources.qrc')
         shutil.copyfile(source_dir, self.guiFile(qrcName))
         self.addQrc(qrcName)
         return self.guiFile(qrcName)
@@ -547,7 +531,7 @@ class App(QMainWindow):
         if obj.objectName() == 'header':
             if self.ui.logo.underMouse():
                 if event.type() == QEvent.MouseButtonRelease:
-                    webbrowser.open('https://github.com/MadPonyInteractive/MadQt')
+                    webbrowser.open('https://madponyinteractive.github.io/MadQt/')
                     return True
             else:
                 if event.type() == QEvent.MouseButtonDblClick:
@@ -688,13 +672,15 @@ class App(QMainWindow):
         self.ui.QtDesignerPathBtn.clicked.connect(lambda: self.openFolder(self.ui.QtDesignerPathInput))
         self.ui.sublimePathBtn.clicked.connect(lambda: self.openFolder(self.ui.sublimePathInput))
 
+        global MadQt_Designer_Paths
+        MadQt_Designer_Paths = self.settings.value("usrInput/pluginPaths", [MadQt.get_path('QtDesignerPlugins')])
+        for item in MadQt_Designer_Paths:
+            self.ui.designerPathsList.addItem(item)
+
         self.ui.SettDoneBtn.clicked.connect(lambda: self.setMainPageIndex(None))
         self.ui.saveSett.clicked.connect(self.saveUserSettings)
 
-        if os.path.basename(__file__)!='main.py':
-            self.ui.createMQEXEC.hide()
-        self.ui.createMQEXEC.clicked.connect(self.openMQEXEC)
-        self.ui.createExecBtn_2.clicked.connect(self.createMQEXEC)
+        self.ui.createMQEXEC.clicked.connect(lambda: webbrowser.open("https://madponyinteractive.github.io/MadQt/ProjectManager/install.html"))
 
         # New custom widget page
         self.ui.cwQtClass.addItems(Mt.QDesignerBaseClasses())
@@ -750,10 +736,15 @@ class App(QMainWindow):
         self.ui.qrcTree.header().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.qrcTree.droppedQrc.connect(self.addQrc)
         self.ui.qrcTree.droppedImg.connect(self.addImages)
-        def setIconSize(s):
-            self.ui.qrcTree.setIconSize(QSize(s,s))
-            self.ui.statusbar.showMessage(f'Icon size: {s}px')
 
+        iSize = self.settings.value("usrInput/iconSize",QSize(64,64))
+        self.ui.qrcTree.setIconSize(iSize)
+        self.ui.imgSizeSlider.setValue(iSize.width())
+        def setIconSize(s):
+            size=QSize(s,s)
+            self.ui.qrcTree.setIconSize(size)
+            self.settings.setValue("usrInput/iconSize",size)
+            self.ui.statusbar.showMessage(f'Icon size: {s}px')
         self.ui.imgSizeSlider.valueChanged.connect(setIconSize)
 
         # Create Executable page
@@ -761,74 +752,7 @@ class App(QMainWindow):
         self.ui.pyinstallerHelp.clicked.connect(lambda:\
          webbrowser.open('https://pyinstaller.readthedocs.io/en/stable/when-things-go-wrong.html'))
 
-        self.ui.pyinstallerHelp_2.clicked.connect(lambda:\
-         webbrowser.open('https://pyinstaller.readthedocs.io/en/stable/when-things-go-wrong.html'))
-
-    # pyinstaller
-    def openMQEXEC(self):
-        #folder select
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
-        directory = QFileDialog.getExistingDirectory(self,
-                "MadQt Project Manager - Select install location",
-                '', options)
-        if directory:
-            if os.path.isdir(directory):
-                self.selectedPath = directory
-                self.setMainPageIndex(6)
-
-    @thread
-    def runExec2(self,arguments):
-        process = subprocess.Popen(arguments, shell=True, bufsize = 1,
-            stdout=subprocess.PIPE, stderr = subprocess.STDOUT,
-            encoding='utf-8', errors = 'replace')
-        while True:
-            realtime_output = process.stdout.readline()
-            if realtime_output == '' and process.poll() is not None:
-                self.finishMQEXEC()
-                break
-            if realtime_output:
-                self.ui.execOutput_2.append(realtime_output.strip())
-
-    def createMQEXEC(self):
-        managerFolder = os.path.join(appDir(),'ProjectManager')
-        os.chdir(managerFolder)
-        madQtIcon = os.path.join(templateDir(),'NewProject','gui','logo.ico')
-        arguments = F"pyinstaller "
-        arguments += F" --collect-all MadQt.Templates "
-        arguments += self.ui.execArgs_2.text()
-        arguments +=F" --name=MadQtProjectManager --icon {madQtIcon} main.py"
-
-        self.ui.execOutput_2.ensureCursorVisible()
-        self.ui.execOutput_2.append('Installing...')
-        self.runExec2(arguments)
-
-    def finishMQEXEC(self):
-        managerFolder = os.path.join(appDir(),'ProjectManager')
-
-        for file in os.listdir(managerFolder):
-            if os.path.splitext(file)[1] == '.spec':
-                os.remove(file)
-                break
-        shutil.rmtree(os.path.join(managerFolder,'build'))
-
-        src = os.path.join(managerFolder,'dist')
-        os.rename(src,os.path.join(managerFolder,'ProjectManager'))
-        src = os.path.join(managerFolder,'ProjectManager')
-        dst = self.selectedPath
-
-        findAt = os.path.join(dst,'ProjectManager')
-        if os.path.isdir(findAt):shutil.rmtree(findAt)
-        shutil.move(src, dst, copy_function = shutil.copytree)
-
-        self.ui.execOutput_2.append(F"Successfully created executable for MadQtProjectManager!")
-        self.ui.execOutput_2.append(F"Output files located @ {findAt}")
-        self.ui.execOutput_2.moveCursor(QTextCursor.End)
-
-        # Mt.openFileExplorer(findAt)
-
-        self.ui.statusbar.showMessage('Executable created!')
-
-
+    # Create Executable
     @thread
     def runExec(self,arguments):
         process = subprocess.Popen(arguments, shell=True, bufsize = 1,
@@ -1016,7 +940,7 @@ class App(QMainWindow):
 
         folder = os.path.join(folder,Mt.cleanString(name))
 
-        ico = os.path.join(templateDir(),'NewProject','gui','logo.ico')
+        ico = os.path.join(MadQt.get_path('Templates'),'NewProject','gui','logo.ico')
         if self.selectedFile is not None:
             ico = ico if '.ico' not in self.selectedFile else self.selectedFile
         self.project = Project(name,folder,ico)
@@ -1601,7 +1525,7 @@ class App(QMainWindow):
             return
 
         ui_filename = 'mainwindow.ui' if ui_type == 'QMainWindow' else 'widget.ui'
-        ui_file = os.path.join(templateDir(),'Uis',ui_filename)
+        ui_file = os.path.join(MadQt.get_path('Templates'),'Uis',ui_filename)
         # copy template to tempDir
         temp_dir = os.path.join(tempDir(),clean_name)
         shutil.copyfile(ui_file,temp_dir)
@@ -1658,6 +1582,48 @@ class App(QMainWindow):
         if not save:return
         self.project.removeUi(file)
 
+    # Settings Methods
+    def saveUserSettings(self):
+        """save settings ui button"""
+        dp = self.ui.QtDesignerPathInput.text()
+        sp = self.ui.sublimePathInput.text()
+        if os.path.isdir(dp):
+            self.settings.setValue("usrInput/designerPath", dp)
+        if os.path.isdir(sp):
+            self.settings.setValue("usrInput/sublimePath", sp)
+            self.ui.sublimePBtn.setStatusTip('Open sublime project')
+            if self.project.valid:self.ui.sublimePBtn.setEnabled(1)
+
+        self.setMainPageIndex(None)
+
+    def defaultIcoSize(self):
+        size = int(self.settings.value("usrInput/icoSize",str(64)))
+        return [(size,size)]
+
+    def addPluginPath(self):
+        global MadQt_Designer_Paths
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "MadQt Project Manager - Select plugin folder",
+                MadQt.get_path('QtDesignerPlugins'), options)
+        if directory:
+            paths = self.settings.value("usrInput/pluginPaths",[])
+            paths.append(directory)
+            self.settings.setValue("usrInput/pluginPaths",paths)
+            self.ui.designerPathsList.addItem(directory)
+            MadQt_Designer_Paths=paths
+
+    def removePluginPath(self):
+        global MadQt_Designer_Paths
+        paths = self.settings.value("usrInput/pluginPaths",[])
+        removed = self.ui.designerPathsList.removeCurrentItem()
+        for item in paths:
+            if item == removed.text():
+                paths.remove(item)
+                break
+        self.settings.setValue("usrInput/pluginPaths",paths)
+        MadQt_Designer_Paths=paths
+
     # other
     def openSublimeProject(self):
         """opens sublime project if not open"""
@@ -1690,19 +1656,6 @@ class App(QMainWindow):
         else:
             subprocess.run(['subl', '--project', foundProject],shell=True)
 
-    def saveUserSettings(self):
-        """save settings ui button"""
-        dp = self.ui.QtDesignerPathInput.text()
-        sp = self.ui.sublimePathInput.text()
-        if os.path.isdir(dp):
-            self.settings.setValue("usrInput/designerPath", dp)
-        if os.path.isdir(sp):
-            self.settings.setValue("usrInput/sublimePath", sp)
-            self.ui.sublimePBtn.setStatusTip('Open sublime project')
-            if self.project.valid:self.ui.sublimePBtn.setEnabled(1)
-
-        self.setMainPageIndex(None)
-
     def hasSublime(self):
         """returns sublime text is available"""
         return os.path.isdir(self.ui.sublimePathInput.text())
@@ -1711,11 +1664,8 @@ class App(QMainWindow):
         if self.project.runApp() is not None:
             self.ui.statusbar.showMessage('Cannot run, no Ui added yet!')
 
-    def defaultIcoSize(self):
-        size = int(self.settings.value("usrInput/icoSize",str(64)))
-        return [(size,size)]
-
 def main():
+    global window
     app = QApplication(sys.argv)
     window = App()
     window.show()

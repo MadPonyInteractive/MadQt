@@ -71,13 +71,45 @@
     ## $QT_END_LICENSE$
 """
 from __future__ import absolute_import
-import sys, os, subprocess, fileinput, platform, io
+import sys, os, subprocess, fileinput, platform, io, importlib, tempfile
 from PIL import Image, ImageChops
 import xml.etree.ElementTree as xml
 from PySide6.QtUiTools import loadUiType
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
 from PySide6.QtCore import QDir
 import MadQt
+
+def isTemp(path):
+    temp_dir = os.path.join(tempfile.gettempdir(),'MadQt')
+    return temp_dir in path
+
+def tempDir():
+    """
+        returns the temp directory
+        if it doesn't exist, it creates it
+    """
+    temp_dir = os.path.join(tempfile.gettempdir(),'MadQt')
+    if not os.path.isdir(temp_dir): os.mkdir(temp_dir)
+    return temp_dir
+
+def breakArgs(string):
+    """turns name(arg1,arg2) into ('name','arg1,arg2')"""
+    split = string.split('(')
+    split[1]=split[1][:-1]
+    return tuple(split)
+
+def packageHasMethod(package,method):
+    """
+        checks if the package exits and if it has the method
+        returns None if no package was found
+        returns a bool for found class
+        example: packageHasMethod('PySide6.QtWidgets','QApplication')
+    """
+    try:
+        imported = importlib.import_module(package)
+        if imported: return hasattr(imported,method)
+    except:
+        return None
 
 def createIco(file_in,file_out=None,sizes=[(32,32)]):
     """
@@ -540,7 +572,7 @@ class App:
                 if _compile:
                     compileUi(ui)
                     # import compiled py file as module
-                    pyFileInported = __import__(ui.replace('.ui',''))
+                    pyFileInported = importlib.import_module(ui.replace('.ui',''))
                     # get the Ui_ class from py file as string
                     uiClass = getUi_class(ui.replace('ui','py'))
                     # convert it to a construct able class
@@ -569,3 +601,245 @@ class App:
         window = {self.window})
         """.split())
 
+
+
+class Ui:
+    """
+        This class can handle ui file operations
+
+        class MadQt.Tools.Ui
+
+        MadQt.Tools.Ui(file, plugin_paths=None)
+
+        Parameters:
+            file - str
+            plugin_paths - list
+
+
+        Notes:
+            custom_widgets can be plugins or promoted_widgets
+            plugins are custom_widgets from the widget box
+            promoted_widgets are custom_widgets made by user
+    """
+    def __init__(self,file,plugin_paths=None):
+        self.file = file
+        self.folder = os.path.dirname(self.file)
+        self.basename = os.path.basename(self.file)
+        self.filename,_ = os.path.splitext(self.basename)
+        self.plugin_paths = []
+        if plugin_paths:
+            for path in plugin_paths:
+                if os.path.isdir(path):
+                    self.plugin_paths.append(path)
+        if not self.plugin_paths: self.plugin_paths.append(self.folder)
+        self.parse()
+
+
+    def __repr__(self):
+        return " ".join(F"""Ui(
+        file = {self.file}
+        """.split())
+
+    def root(self):
+        """returns xml root"""
+        return self.parsed.getroot()
+
+    def parse(self):
+        try:
+            self.parsed = xml.parse(self.file)
+        except:
+            # returns error because it found:
+            # </resources> closed tag
+            # so we remove it
+            deleteLineFromFile(self.file,'</resources>')
+            self.parsed = xml.parse(self.file)
+
+    def get_class(self):
+        """returns ui class"""
+        return self.parsed.find('class').text
+
+    def get_qt_class(self):
+        """returns ui qt class QMainWindow | QWidget | QDialog"""
+        return self.parsed.find('widget').get('class')
+
+    def add_qrc(self,qrc):
+        """add qrc resource if not added returns bool"""
+        for inc in self.qrcs_includes():
+            qrc_basename = os.path.basename(inc.get('location'))
+            if qrc_basename==qrc:return False
+        resources = self.parsed.find('resources')
+        if not resources: resources = self.root().append(xml.Element('resources'))
+        include = xml.Element('include')
+        include.set('location',qrc)
+        resources.append(include)
+        return True
+
+    def add_custom_widget(self,_class,qt_class,module):
+        """adds a widget"""
+        if self.has_custom_widget(_class):return False
+        cws = self.parsed.find('customwidgets')
+        if not cws: cws = self.root().append(xml.Element('customwidgets'))
+        cw=xml.Element('customwidget')
+        _c=xml.Element('class')
+        _e=xml.Element('extends')
+        _h=xml.Element('header')
+        _c.text=_class
+        _e.text=qt_class
+        _h.text=module
+        cw.append(_c)
+        cw.append(_e)
+        cw.append(_h)
+        cws.append(cw)
+        return True
+
+    def qrcs_includes(self):
+        """returns a list with all includes in resources"""
+        resources = self.parsed.find('resources')
+        if resources: return [inc for inc in resources.findall('include')]
+        return []
+
+    def get_parent(self,elem):
+        """returns elem parent"""
+        parent_map = {c: p for p in self.root().iter() for c in p}
+        return parent_map[elem]
+
+    def has_widget(self,_class):
+        """checks if widget by the given class is in Ui"""
+        return any(w.get('class')==_class for w in self.widgets())
+
+    def widgets(self):
+        """returns a list with all found widgets"""
+        return self.parsed.iter('widget')
+
+    def custom_widgets(self):
+        """returns list with all custom widgets"""
+        cws = self.parsed.find('customwidgets')
+        if cws: return [cw for cw in cws.findall('customwidget')]
+        return []
+
+    def has_custom_widget(self,_class):
+        return any(cw.find('class').text == _class for cw in self.custom_widgets())
+
+    def promoted_widgets(self):
+        """returns a list with all found promoted_widgets"""
+        return [w for w in self.custom_widgets() if '.h' in w.find('header').text]
+
+    def has_promoted_widget(self,_class):
+        return any(cw.find('class').text == _class for cw in self.promoted_widgets())
+
+    def plugins(self):
+        """returns a list with all found plugins"""
+        return [w for w in self.custom_widgets() if '.h' not in w.find('header').text]
+
+    def imported_plugins(self):
+        """returns a list with all found plugins that are imported"""
+        return [w for w in self.plugins() if '.' in w.find('header').text]
+
+    def not_imported_plugins(self):
+        """returns a list with all found plugins that are imported"""
+        return [w for w in self.plugins() if '.' not in w.find('header').text]
+
+    def has_plugin(self,_class):
+        return any(cw.find('class').text == _class for cw in self.plugins())
+
+    def plugin_in_paths(self,cw):
+        """checks if custom widget is in plugin_paths"""
+        plugin = cw.find('header').text+'.py'
+        for path in self.plugin_paths:
+            for file in os.listdir(path):
+                if file == plugin:
+                    return True
+        return False
+
+    def can_import_plugin(self,cw):
+        """None or False if it cant"""
+        return packageHasMethod(cw.find('header').text,cw.find('class').text)
+
+    def plugin_valid(self,cw):
+        return self.plugin_in_paths(cw) or self.can_import_plugin(cw)
+
+    def slots(self):
+        """returns a list with all found slots"""
+        slots = self.parsed.find('slots')
+        if not slots:return []
+        return [breakArgs(signal.text) for signal in slots.findall('slot')]
+
+    def signals(self):
+        """returns a list of tuples [(slot,args)] with all found signals"""
+        slots = self.parsed.find('slots')
+        if not slots:return []
+        return [breakArgs(signal.text) for signal in slots.findall('signal')]
+
+    def compile_qrcs(self,dest_path=None):
+        """
+            compiles all qrc files to given folder or ui folder _rc.py
+            ! qrc must be in same folder as ui file
+        """
+        dest_path = dest_path if dest_path else self.folder
+        for inc in self.qrcs_includes():
+            qrc_basename = os.path.basename(inc.get('location'))
+            qrc_file = os.path.join(self.folder,qrc_basename)
+            compileQrc(qrc_file,dest_path)
+
+    def compile(self,file=None,out_file=None,compile_qrcs=True):
+        """compiles ui to py and returns py file"""
+        if compile_qrcs:self.compile_qrcs()
+        file = file if file else self.file
+        out_file = out_file if out_file else file.replace('.ui','.py')
+        subprocess.Popen(['pyside6-uic', file, '-o', out_file],shell=True).wait()
+        return out_file
+
+    def save(self, out_file=None):
+        """writes/saves ui file"""
+        out_file = out_file if out_file else self.file
+        xml.indent(self.parsed.getroot())# prettify
+        self.parsed.write(out_file, xml_declaration=True, encoding='UTF-8')# save
+        return out_file
+
+    def close(self):
+        """
+            removes invalid plugins
+            compiles everything
+            adds signals, slots and widget imports to compiled.py
+        """
+        # remove invalid plugins
+        cws = self.parsed.find('customwidgets')
+        removed_plugins = []
+        removed_widgets = []
+        if cws:
+            # remove invalid plugins
+            for plugin in self.plugins():
+                if not self.plugin_valid(plugin):
+                    cws.remove(plugin)
+                    removed_plugins.append({
+                        'class':plugin.find('class').text,
+                        'module':plugin.find('header').text
+                        })
+                    for w in self.widgets():
+                        if w.get('class')==plugin.find('class').text:
+                            removed_widgets.append(w.attrib)
+                            self.get_parent(w).remove(w)
+
+        ui_file = self.save(os.path.join(tempDir(),'temp.ui'))
+        out_file = self.file.replace('.ui','.py')
+        py_file = self.compile(ui_file,out_file)
+
+        # Add Ui class to compiled py file
+        with open(py_file,"a") as f:
+            if len(self.signals()):f.write(F"from PySide6.QtCore import Signal\n")
+            f.write(F"class Ui({self.get_qt_class()}):\n")
+            [f.write(F"    {sig[0]} = Signal({sig[1]})\n") for sig in self.signals()]
+            f.write(F"    def __init__(self):\n")
+            f.write(F"        super().__init__()\n")
+            f.write(F"        self.ui = Ui_{self.get_class()}()\n")
+            f.write(F"        self.ui.setupUi(self)\n")
+            [f.write(F"    def {slot[0]}(self,*a,**kw):pass\n") for slot in self.slots()]
+
+        return {
+            'compiled_file':py_file,
+            'removed_plugins':removed_plugins,
+            'removed_widgets':removed_widgets,
+            # in paths but not importable
+            'in_paths':[plugin.find('header').text for plugin in self.not_imported_plugins() if self.plugin_in_paths(plugin)],
+            'promoted_widgets':[pw.find('header').text.replace('.h','') for pw in self.promoted_widgets()]
+            }

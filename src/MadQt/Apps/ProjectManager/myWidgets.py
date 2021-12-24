@@ -1,6 +1,6 @@
-from MadQt.Qt.QtWidgets import *
-from MadQt.Qt.QtCore import *
-from MadQt.Qt.QtGui import *
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
 import os
 
 def getMainWindow():
@@ -151,6 +151,30 @@ class ListView(QListWidget,DragDrop):
     def dragEnterEvent(self, event):DragDrop.dragEnterEvent(self, event)
     def dragMoveEvent(self, event):DragDrop.dragMoveEvent(self, event)
     def dropEvent(self, event):DragDrop.dropEvent(self, event)
+
+class PathsList(ListView):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.mainWindow = getMainWindow()
+        self.menu = QMenu('Paths Menu',self)
+        self.menu.setCursor(Qt.PointingHandCursor)
+        self.menu.addAction('Add',self.mainWindow.addPluginPath)
+        self.menu.addAction('Delete',self.mainWindow.removePluginPath)
+
+    def removeCurrentItem(self):
+        for i, item in enumerate(self.getItems()):
+            if item == self.currentItem():
+                self.takeItem(i)
+                return item
+
+    def contextMenuEvent(self,event):
+        underMouse = self.itemAt(event.pos())
+        if underMouse is None:# Empty area
+            [action.setVisible(action.text() == 'Add') for action in self.menu.actions()]
+        else:# Item
+            [action.setVisible(action.text() == 'Delete') for action in self.menu.actions()]
+        self.menu.popup(event.globalPos())
+        event.accept()
 
 class TreeView(QTreeWidget,DragDrop):
     droppedQrc = Signal(list)

@@ -72,18 +72,35 @@
 """
 from __future__ import absolute_import
 import os
-# Setup QDesigner Plugin Paths
-MadQdPlugins_path = os.getcwd()
-MadQdPlugins_path = os.path.join(MadQdPlugins_path,'QtDesignerPlugins')
-QdPlugins_path = os.getenv("PYSIDE_DESIGNER_PLUGINS")
-if QdPlugins_path is not None:
-    if MadQdPlugins_path not in QdPlugins_path:
-        os.environ["PYSIDE_DESIGNER_PLUGINS"] += os.pathsep + MadQdPlugins_path
-else:
-    os.environ["PYSIDE_DESIGNER_PLUGINS"] = MadQdPlugins_path
-QDESIGNER_PLUGIN_PATHS = os.getenv("PYSIDE_DESIGNER_PLUGINS")
-# print(QDESIGNER_PLUGIN_PATHS)
+
+def get_path(path=None):
+    MadQt_root = os.path.abspath(os.path.dirname(__file__))# \site-packages\MadQt
+    return os.path.join(MadQt_root, path) if path else MadQt_root
+
+def setPermanentEnv(_env,_paths):
+    import subprocess
+    if os.name == 'posix':  # if is in linux
+        exp = f'export {_env}={_paths}'
+    if os.name == 'nt':  # if is in windows
+        exp = f'setx {_env} {_paths}'
+    subprocess.Popen(exp, shell=True).wait()
+    os.environ[_env]=_paths
+
+def setupMadQtPlugins():
+    # Setup QDesigner Plugin Paths
+    envVar = "PYSIDE_DESIGNER_PLUGINS"
+    MadQDPlugins_path = get_path('QtDesignerPlugins')
+    QdPlugins_env = os.getenv(envVar,False)
+    if QdPlugins_env:
+        QdPlugins_env = [i for i in os.environ[envVar].split(os.pathsep)]
+        if MadQDPlugins_path in QdPlugins_env:return
+        QdPlugins_env.append(MadQDPlugins_path)
+        _paths = os.pathsep.join(QdPlugins_env)
+    else:
+        _paths = MadQDPlugins_path
+    setPermanentEnv(envVar,_paths)
+    # print(os.getenv(envVar))
+setupMadQtPlugins()
 
 __version__ = "0.0.21"
 __author__ = 'Fabio Goncalves'
-__credits__ = 'Riverbank Computing'
