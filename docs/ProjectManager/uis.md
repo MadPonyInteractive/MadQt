@@ -22,7 +22,7 @@ When a project is first created, it creates a file named main.py found in the de
 This file contains some information and starter code to run your app right out of the box.\
 In main.py file there's a reference to a ui named "MainWindow".
 ```python
-from MadQt.Qt.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 import sys
 
 from gui import MainWindow# <<<- THIS REFERENCE
@@ -69,7 +69,7 @@ Also notice how we can access our custom widgets by getting them from
 the widgets folder.
 
 ```python
-from MadQt.Qt.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 import sys
 # Getting custom widget class "Button"
 # From custom widget module "button"
