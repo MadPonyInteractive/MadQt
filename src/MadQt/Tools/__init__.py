@@ -678,7 +678,7 @@ class Ui:
         """adds a widget"""
         if self.has_custom_widget(_class):return False
         cws = self.parsed.find('customwidgets')
-        if not cws: cws = self.root().append(xml.Element('customwidgets'))
+        if not cws:self.root().append(xml.Element('customwidgets'))
         cw=xml.Element('customwidget')
         _c=xml.Element('class')
         _e=xml.Element('extends')
@@ -689,7 +689,7 @@ class Ui:
         cw.append(_c)
         cw.append(_e)
         cw.append(_h)
-        cws.append(cw)
+        self.parsed.find('customwidgets').append(cw)
         return True
 
     def qrcs_includes(self):
