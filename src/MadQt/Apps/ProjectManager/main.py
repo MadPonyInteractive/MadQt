@@ -237,6 +237,7 @@ class Project:
                         ui = Ui_MainWindow()
                         ui.setupUi(self)
         """
+        ui_file = self.guiFile(ui_file)
         plugin_locations = MadQt_Designer_Paths
         widget_folder = os.path.join(self.devPath(),'widgets')
         plugin_locations.append(widget_folder)
