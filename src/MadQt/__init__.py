@@ -102,5 +102,5 @@ def setupMadQtPlugins():
     # print(os.getenv(envVar))
 setupMadQtPlugins()
 
-__version__ = "0.0.23"
+__version__ = "0.0.25"
 __author__ = 'Fabio Goncalves'

@@ -275,11 +275,19 @@ class Project:
 
         # add widget folder to widgets imports
         # from myWidgets >> from widgets.myWidgets
+        # change resource imports
+        # import resources_rc >> import gui.resources_rc
         from_widgets = close_dict['promoted_widgets']+close_dict['in_paths']
         for line in fileinput.input(close_dict['compiled_file'], inplace=1):
             for cw in from_widgets:
                 if f'from {cw} import ' in line:
                     line = line.replace(cw, 'widgets.'+cw)
+
+            for rs in self.settings['qrcFiles']:
+                rs = rs.replace('.qrc','')
+                if f'import {rs}' in line:
+                    line = line.replace(rs, 'gui.'+rs)
+
             sys.stdout.write(line)
 
         # inform user of removed plugins and widgets
@@ -663,6 +671,7 @@ class App(QMainWindow):
 
         # Settings Page
         default_qtPath = os.path.join(pySideDir())
+        # self.settings.setValue("usrInput/designerPath", default_qtPath)
         self.ui.QtDesignerPathInput.setText(self.settings.value("usrInput/designerPath", default_qtPath))
         self.ui.sublimePathInput.setText(self.settings.value("usrInput/sublimePath", ''))
 

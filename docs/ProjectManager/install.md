@@ -21,7 +21,7 @@ You should see the MadQt Project Manager
 ![image](https://user-images.githubusercontent.com/30872066/146767192-5e3f2ad9-58d3-444c-a39a-3deb8d576b02.png)
 
 
-### Create a shortcut for Windows
+### Create a executable for Windows
 
 1 - Create a new file in a text and paste the following code
 ```python
@@ -29,25 +29,3 @@ You should see the MadQt Project Manager
 MadQtProjectManager
 ```
 2 - Save the file as project_manager.bat
-
-3 - Right click on the file and select "Create Shortcut"\
-    Alternatively you can drag and drop the file holding\
-    the Atl key to automatically create the shortcut
-
-4 - Right click on the shortcut and select properties
-
-5 - In the Run: field select Minimized
-
-![image](https://user-images.githubusercontent.com/30872066/147325586-71f8cb00-9005-45dc-9897-39ffc819073c.png)
-
-6 - Click the "Advanced" button
-
-7 - Check Run as administrator
-
-![image](https://user-images.githubusercontent.com/30872066/147325628-330283e0-d35e-4127-9289-e35b087f0ee0.png)
-
-8 - Press Ok
-
-9 - Press Apply
-
-10 - Press Ok
