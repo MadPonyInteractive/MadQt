@@ -27,11 +27,10 @@ You should see the MadQt Project Manager
 @echo off
 MadQtProjectManager
 ```
+2 - Save the file as project_manager.bat
 
 Note: Creating a shortcut from this file so that the command line window\
 does not show will stop Project Manager from receiving drag drops.
-
-2 - Save the file as project_manager.bat
 
 ### Create a shortcut for windows
 [PsgShortcut](https://pypi.org/project/psgshortcut/) is a cool tool that allows for
