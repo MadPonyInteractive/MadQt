@@ -29,3 +29,7 @@ You should see the MadQt Project Manager
 MadQtProjectManager
 ```
 2 - Save the file as project_manager.bat
+
+### Create a shortcut for windows
+[PsgShortcut](https://pypi.org/project/psgshortcut/) is a cool tool that allows for
+creating windows shortcuts for python scripts.
