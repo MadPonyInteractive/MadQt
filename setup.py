@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.25',
+    version='0.0.27',
     description='Tutorials and Tools for PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -18,7 +18,7 @@ setuptools.setup(
                       'pyinstaller >= 4.7'
                      ],
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',  
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3.9',
@@ -32,6 +32,7 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'MadQtProjectManager=MadQt.scripts.ProjectManager:main',
+            'MadQtPluginCreator=MadQt.scripts.PluginCreator:main',
         ],
     },
     include_package_data=True,

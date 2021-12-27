@@ -1413,6 +1413,7 @@ class App(QMainWindow):
             shutil.copy2(src,file)
         moduleItem = CustomWidgetFile(file, self.ui.moduleTree)
         valueList = []
+
         with open(file,"r") as f:
             for line in f:
                 if 'class' in line:
@@ -1683,3 +1684,14 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# def sub_classes(_cls):
+#     return [cls.__name__ for cls in _cls.__subclasses__()]
+
+# def all_subclasses(cls):
+#     return set(cls.__subclasses__()).union(
+#         [s for c in cls.__subclasses__() for s in all_subclasses(c)])
+
+# print(all_subclasses(QWidget))
+# print(all_subclasses(QWidget))

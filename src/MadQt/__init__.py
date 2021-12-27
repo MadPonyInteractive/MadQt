@@ -86,21 +86,21 @@ def setPermanentEnv(_env,_paths):
     subprocess.Popen(exp, shell=True).wait()
     os.environ[_env]=_paths
 
-def setupMadQtPlugins():
+def addEnvPath(path_to_set=None):
     # Setup QDesigner Plugin Paths
     envVar = "PYSIDE_DESIGNER_PLUGINS"
-    MadQDPlugins_path = get_path('QtDesignerPlugins')
+    path_to_set = path_to_set if path_to_set else get_path('QtDesignerPlugins')
     QdPlugins_env = os.getenv(envVar,False)
     if QdPlugins_env:
         QdPlugins_env = [i for i in os.environ[envVar].split(os.pathsep)]
-        if MadQDPlugins_path in QdPlugins_env:return
-        QdPlugins_env.append(MadQDPlugins_path)
+        if path_to_set in QdPlugins_env:return
+        QdPlugins_env.append(path_to_set)
         _paths = os.pathsep.join(QdPlugins_env)
     else:
-        _paths = MadQDPlugins_path
+        _paths = path_to_set
     setPermanentEnv(envVar,_paths)
     # print(os.getenv(envVar))
-setupMadQtPlugins()
+addEnvPath()
 
-__version__ = "0.0.25"
+__version__ = "0.0.27"
 __author__ = 'Fabio Goncalves'

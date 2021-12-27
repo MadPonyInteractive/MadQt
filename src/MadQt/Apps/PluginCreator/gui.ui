@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>581</width>
+    <height>595</height>
+   </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>MadQt Plugin Creator</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/images/img/mpi_logo_icon.ico</normaloff>:/images/img/mpi_logo_icon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+	font: 600 14pt &quot;Dosis SemiBold&quot;;
+	color: rgb(219, 203, 189);
+	background:transparent;
+outline: none; 
+}
+QAbstractScrollArea{
+	background-color: transparent;
+}
+*[isTitle=&quot;true&quot;]{
+	border-bottom:2px solid;
+	color: rgb(41, 0, 1);
+	font: 800 24pt &quot;Dosis ExtraBold&quot;;
+	padding-bottom:5px;
+}
+QMainWindow,QWidget#centralwidget,QStatusBar{
+	background-color: qlineargradient(spread:pad, x1:0.42, y1:0, x2:0.528, y2:1, stop:0 rgba(135, 67, 29, 255), stop:1 rgba(41, 0, 1, 255));
+	border-radius:10px;
+}
+QStatusBar{
+	background-color: rgb(41, 0, 1);
+}
+QStatusBar::item {
+    border: none;
+}
+QStatusBar QLabel#extraMsg {
+	background-color: rgb(135, 67, 29);
+}
+QSizeGrip {
+	image: url(:/icons/img/cil-size-grip.png);
+     width: 16px;
+     height: 16px;
+	margin:0px 10px 10px 0px;
+}
+
+QMenu {	
+    border: 2px solid rgb(200, 121, 65);
+	border-radius:3px;
+	padding:5px;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+}
+QMenu::item:selected {
+	background-color: rgb(135, 67, 29);	
+	color: rgb(219, 203, 189);
+}
+QMenu::item:disabled {
+	background-color: rgb(219, 203, 189);
+   	color: rgb(135, 67, 29);
+}
+
+QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0.489, y1:1, x2:0.476864, y2:0, stop:0 rgba(41, 0, 1, 255), stop:0.670455 rgba(135, 67, 29, 255));
+padding:4px;
+border-radius:4px;
+}
+QAbstractButton:hover,QAbstractButton:pressed, QAbstractButton:checked {
+	background-color: qlineargradient(spread:pad, x1:0.46, y1:1, x2:0.454136, y2:0.017, stop:0.420455 rgba(135, 67, 29, 255), stop:0.920455 rgba(200, 121, 65, 255));
+}
+
+QPushButton:pressed, QPushButton:checked{
+border:2px solid rgb(200, 121, 65);
+}
+
+QAbstractButton:disabled{
+	background-color: rgb(135, 67, 29);
+	color: rgb(41, 0, 1);
+}
+QToolButton:disabled{
+	background-color: rgb(135, 67, 29);
+}
+
+QToolButton{
+background:transparent;
+border:none;
+}
+
+QToolButton:checked,QToolButton:pressed{
+border-bottom:2px solid rgb(200, 121, 65);
+}
+QHeaderView::section {	
+	color: rgb(200, 121, 65);
+    border:none;
+ background:transparent;
+}
+
+
+QAbstractItemView::item{
+padding:8px;
+	color: rgb(219, 203, 189);
+border-radius:8px;
+margin-right:5px;
+}
+
+QAbstractItemView::item:hover{
+	border:1px solid rgb(219, 203, 189);
+}
+
+QAbstractItemView::item:selected, QAbstractItemView::item:selected:active,QAbstractItemView::item:selected:!active{
+	background-color: qlineargradient(spread:repeat, x1:0, y1:1, x2:0, y2:0, stop:0.0959821 rgba(135, 67, 29, 255), stop:0.151786 rgba(200, 121, 65, 255), stop:0.928571 rgba(174, 99, 51, 255), stop:1 rgba(135, 67, 29, 255));
+	color: rgb(41, 0, 1);
+}
+QListView::item{
+border-bottom:1px solid #000;	
+}
+
+QListView#designerPathsList::item{
+padding:0px;
+border:none;
+margin:0px;
+font-size:9pt;
+}
+
+QComboBox, QLineEdit {
+border:1px solid rgb(200, 121, 65);
+}
+QTextEdit,QLineEdit:focus, QComboBox::on, QComboBox QListView::item{
+	background-color: rgb(41, 0, 1);
+}
+
+
+
+QToolTip { 		
+	font: 600 14pt &quot;Dosis SemiBold&quot;;
+    color: rgb(219, 203, 189);
+    background-color: rgb(135, 67, 29);
+    padding: 10px;
+    border: 2px solid #c87941;
+    border-radius: 5px;
+}
+
+
+
+QAbstractSlider {	
+	background-color: rgb(41, 0, 1);
+}
+QAbstractSlider::handle{
+	background-color: rgb(135, 67, 29);
+}
+
+QAbstractSlider:horizontal {
+    border: none;
+    height: 12px;
+    margin: 0px 21px 0 21px;
+	border-radius: 0px;
+}
+QAbstractSlider::handle:horizontal {
+    min-width: 25px;
+}
+QAbstractSlider::add-line:horizontal {
+    border: none;
+	border-left:2px solid rgba(255,255,255,120);
+    background: rgba(0,0,0,80);
+    width: 20px;
+	border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+QAbstractSlider::sub-line:horizontal {
+    border: none;
+	border-right:2px solid rgba(255,255,255,120);
+    background: rgba(0,0,0,80);
+    width: 20px;
+	border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+QAbstractSlider::up-arrow:horizontal, QAbstractSlider::down-arrow:horizontal
+{
+     background: none;
+}
+QAbstractSlider::add-page:horizontal, QAbstractSlider::sub-page:horizontal
+{
+     background: none;
+}
+ QAbstractSlider:vertical {
+	border: none;	
+    width: 12px;
+    margin: 21px 0 21px 0;
+	border-radius: 0px;
+ }
+ QAbstractSlider::handle:vertical {	
+    min-height: 25px;
+ }
+ QAbstractSlider::add-line:vertical {
+     border: none;
+	border-top:2px solid rgba(255,255,255,120);
+    background: rgba(0,0,0,80);
+     height: 20px;
+	border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+ QAbstractSlider::sub-line:vertical {
+	border: none;
+	border-bottom:2px solid rgba(255,255,255,120);
+    background:  rgba(0,0,0,80);
+     height: 20px;
+	border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+ QAbstractSlider::up-arrow:vertical, QAbstractSlider::down-arrow:vertical {
+     background: none;
+ }
+
+ QAbstractSlider::add-page:vertical, QAbstractSlider::sub-page:vertical {
+     background: none;
+ }
+QSlider::handle::horizontal{
+width:25px;
+}
+QSlider::groove{
+	background-color: rgb(41, 0, 1);
+	border:1px solid rgb(135, 67, 29);
+}
+
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QWidget" name="header" native="true">
+      <property name="cursor">
+       <cursorShape>SizeAllCursor</cursorShape>
+      </property>
+      <property name="statusTip">
+       <string>Double click for full screen</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="TitleLyt" stretch="0,0">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="mainTitle">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="statusTip">
+            <string>Start page</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-size:22pt;</string>
+           </property>
+           <property name="text">
+            <string>MadQt</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="secTitle">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font-size:12pt;</string>
+           </property>
+           <property name="text">
+            <string>    Plugin Creator</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>337</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="logo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>1000</width>
+           <height>1000</height>
+          </size>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="statusTip">
+          <string>Documentation</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/images/img/mpi_logo_small.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>4</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="closeBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="toolTip">
+            <string>Close</string>
+           </property>
+           <property name="statusTip">
+            <string>Close</string>
+           </property>
+           <property name="text">
+            <string>x</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>8</width>
+             <height>8</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>3</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QToolButton" name="minimizeBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="toolTip">
+            <string>Minimize</string>
+           </property>
+           <property name="statusTip">
+            <string>Minimize</string>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>8</width>
+             <height>8</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>563</width>
+         <height>450</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="pluginName">
+          <property name="statusTip">
+           <string>Your plugin name</string>
+          </property>
+          <property name="placeholderText">
+           <string>MyAwedomePlugin</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="QtClass">
+          <property name="statusTip">
+           <string>Qt Class your plugin inherits from</string>
+          </property>
+          <property name="placeholderText">
+           <string>QWidget</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QSpinBox" name="geoX">
+            <property name="statusTip">
+             <string>X pos</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="geoY">
+            <property name="statusTip">
+             <string>Y Pos</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="geoW">
+            <property name="statusTip">
+             <string>Width</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="maximum">
+             <number>8000</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="geoH">
+            <property name="statusTip">
+             <string>Height</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="maximum">
+             <number>8000</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="8" column="1">
+         <widget class="PathsList" name="propList">
+          <property name="statusTip">
+           <string>Right click to add/remove properties</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:1px solid rgb(200, 121, 65);
+</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLineEdit" name="tooltipIn">
+          <property name="statusTip">
+           <string>QtDesigner tooltip</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>My plugin is...</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_20">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="newPIcon">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="resources.qrc">:/images/img/mpi_logo_icon.ico</pixmap>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="newPIconBrowse">
+            <property name="minimumSize">
+             <size>
+              <width>24</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="statusTip">
+             <string>Select image file -&gt; will be converted to .ico</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="14" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_21">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="regPath">
+            <property name="statusTip">
+             <string>Plugin path or registry file</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>C:\path\to\plugin\registration</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="regOpen">
+            <property name="minimumSize">
+             <size>
+              <width>24</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="statusTip">
+             <string>Open path/file</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="addToExistingCb">
+            <property name="statusTip">
+             <string>Add to an existing register </string>
+            </property>
+            <property name="text">
+             <string>Add to Existing</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="16" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Group</string>
+          </property>
+         </widget>
+        </item>
+        <item row="16" column="1">
+         <widget class="QLineEdit" name="widgetGroup">
+          <property name="statusTip">
+           <string>Group name in QtDesigner Widget box</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Custom Widgets</string>
+          </property>
+         </widget>
+        </item>
+        <item row="19" column="1">
+         <widget class="QCheckBox" name="isContainerCb">
+          <property name="statusTip">
+           <string>Will it contain other widgets?</string>
+          </property>
+          <property name="text">
+           <string>Is Container</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Icon</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Tooltip</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="statusTip">
+           <string>Paths to QtDesigner Plugins</string>
+          </property>
+          <property name="text">
+           <string>Properties</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="statusTip">
+           <string>Paths to QtDesigner Plugins</string>
+          </property>
+          <property name="text">
+           <string>Geometry</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Qt Class</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Class Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Registry</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="JumpButton" name="createPluginBtn">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="statusTip">
+       <string>Create a new project</string>
+      </property>
+      <property name="text">
+       <string>Create Plugin</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/img/cil-file.png</normaloff>:/icons/img/cil-file.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>16</width>
+        <height>16</height>
+       </size>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl+N</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="styleSheet">
+    <string notr="true">font-size:12pt;</string>
+   </property>
+   <property name="sizeGripEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <action name="actionPotatoes">
+   <property name="text">
+    <string>Potatoes</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>JumpButton</class>
+   <extends>QPushButton</extends>
+   <header>myWidgets.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PathsList</class>
+   <extends>QListWidget</extends>
+   <header>myWidgets.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+  <include location="../ProjectManager/resources.qrc"/>
+  <include location="C:/Users/mindd/.designer/backup/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>closeBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>579</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>360</x>
+     <y>-15</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>minimizeBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showMinimized()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>580</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>417</x>
+     <y>-19</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
