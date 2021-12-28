@@ -25,7 +25,7 @@ You should see the MadQt Project Manager
 
 ### Single registry file for multiple plugins
 If you would like to create a file to register multiple plugins with an unique name
-create a python file that starts with the word "register" for example: \
+create a python file that starts with the word "register" for example:
 - register_jimmy_plugins.py
 
 In the file paste the following code:
