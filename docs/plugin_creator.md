@@ -21,6 +21,28 @@ You should see the MadQt Project Manager
 ![image](https://user-images.githubusercontent.com/30872066/147564757-4022a05d-09b1-46f1-ab56-04056f3b8a38.png)
 
 
+***
+
+### Single registry file for multiple plugins
+If you would like to create a file to register multiple plugins with an unique name
+create a python file that starts with the word "register" for example:\
+- register_jimmy_plugins.py
+
+In the file paste the following code:
+```python
+#EXTRA_IMPORTS#
+
+from PySide6.QtDesigner import QPyDesignerCustomWidgetCollection
+if __name__ == '__main__':
+```
+You can now create multiple plugins and add them to register_jimmy_plugins.py for
+multiple registration in a single file.
+
+When creating a new plugin check the "Add to Existing" checkbox, press
+the browse button next to it and select register_jimmy_plugins.py.
+
+***
+
 ### Create a executable for Windows
 1 - Create a new file in a text editor and paste the following code
 ```python
