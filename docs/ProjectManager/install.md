@@ -22,7 +22,7 @@ You should see the MadQt Project Manager
 
 
 ### Create a executable for Windows
-1 - Create a new file in a text and paste the following code
+1 - Create a new file in a text editor and paste the following code
 ```python
 @echo off
 MadQtProjectManager
