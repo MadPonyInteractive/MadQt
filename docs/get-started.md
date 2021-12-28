@@ -6,6 +6,18 @@ nav_order: 1
 
 # Getting Started
 
+***
+
+### Install via Pip
+Once you have Python and pip installed in your system you can
+install MadQt from a command line.
+
+```python
+pip install MadQt
+```
+
+***
+
 ### Prerequisites
 
 #### Python
@@ -21,6 +33,8 @@ in order to install MadQt.
 
 [Installing Pip](https://pip.pypa.io/en/stable/installation/)
 
+***
+
 ### Dependencies
 Apart from python the dependencies bellow will automatically be
 installed or updated once you install MadQt via pip.
@@ -32,13 +46,7 @@ Pillow >= 8.3.0
 pyinstaller >= 4.7
 ```
 
-### Install via Pip
-Once you have Python and pip installed in your system you can
-install MadQt from a command line.
-
-```python
-pip install MadQt
-```
+***
 
 ### Checking installation
 
