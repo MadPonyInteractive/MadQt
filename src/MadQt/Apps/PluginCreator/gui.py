@@ -24,14 +24,12 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QFrame,
 
 from myWidgets import (JumpButton, PathsList)
 import resources_rc
-import resources_rc
-import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(581, 595)
+        MainWindow.resize(593, 662)
         MainWindow.setAcceptDrops(True)
         icon = QIcon()
         icon.addFile(u":/images/img/mpi_logo_icon.ico", QSize(), QIcon.Normal, QIcon.Off)
@@ -163,7 +161,10 @@ class Ui_MainWindow(object):
 "	background-color: rgb(41, 0, 1);\n"
 "}\n"
 "\n"
-"\n"
+"QLineEdit:disabled{\n"
+"	background-color: rgb(219, 203, 189);\n"
+"	color: rgb(41, 0, 1);\n"
+"}\n"
 "\n"
 "QToolTip { 		\n"
 "	font: 600 14pt \"Dosis SemiBold\";\n"
@@ -186,12 +187,12 @@ class Ui_MainWindow(object):
 "QAbstractSlider:horizontal {\n"
 "    border: none;\n"
 "    height: 12px;\n"
-"    margin: 0px 21px 0 21px;\n"
+"    margin: 0px 21px 0 21"
+                        "px;\n"
 "	border-radius: 0px;\n"
 "}\n"
 "QAbstractSlider::handle:horizontal {\n"
-"    min-width: "
-                        "25px;\n"
+"    min-width: 25px;\n"
 "}\n"
 "QAbstractSlider::add-line:horizontal {\n"
 "    border: none;\n"
@@ -222,11 +223,11 @@ class Ui_MainWindow(object):
 "     background: none;\n"
 "}\n"
 " QAbstractSlider:vertical {\n"
-"	border: none;	\n"
+""
+                        "	border: none;	\n"
 "    width: 12px;\n"
 "    margin: 21px 0 21px 0;\n"
-"	border-radius: 0px"
-                        ";\n"
+"	border-radius: 0px;\n"
 " }\n"
 " QAbstractSlider::handle:vertical {	\n"
 "    min-height: 25px;\n"
@@ -255,14 +256,14 @@ class Ui_MainWindow(object):
 "     background: none;\n"
 " }\n"
 "\n"
-" QAbstractSlider::add-page:vertical, QAbstractSlider::sub-page:vertical {\n"
+" QAbstractSlider::add-page:vertical, QAbstractSlider::sub-page:vertical {"
+                        "\n"
 "     background: none;\n"
 " }\n"
 "QSlider::handle::horizontal{\n"
 "width:25px;\n"
 "}\n"
-""
-                        "QSlider::groove{\n"
+"QSlider::groove{\n"
 "	background-color: rgb(41, 0, 1);\n"
 "	border:1px solid rgb(135, 67, 29);\n"
 "}\n"
@@ -364,18 +365,33 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 563, 450))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 575, 517))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName(u"formLayout")
+        self.label = QLabel(self.scrollAreaWidgetContents)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+
         self.pluginName = QLineEdit(self.scrollAreaWidgetContents)
         self.pluginName.setObjectName(u"pluginName")
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.pluginName)
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.pluginName)
+
+        self.label_2 = QLabel(self.scrollAreaWidgetContents)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
 
         self.QtClass = QLineEdit(self.scrollAreaWidgetContents)
         self.QtClass.setObjectName(u"QtClass")
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.QtClass)
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.QtClass)
+
+        self.label_9 = QLabel(self.scrollAreaWidgetContents)
+        self.label_9.setObjectName(u"label_9")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_9)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -408,7 +424,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.geoH)
 
 
-        self.formLayout.setLayout(6, QFormLayout.FieldRole, self.horizontalLayout)
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
+
+        self.label_8 = QLabel(self.scrollAreaWidgetContents)
+        self.label_8.setObjectName(u"label_8")
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_8)
 
         self.propList = PathsList(self.scrollAreaWidgetContents)
         self.propList.setObjectName(u"propList")
@@ -416,12 +437,22 @@ class Ui_MainWindow(object):
 "")
         self.propList.setFrameShape(QFrame.NoFrame)
 
-        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.propList)
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.propList)
+
+        self.label_4 = QLabel(self.scrollAreaWidgetContents)
+        self.label_4.setObjectName(u"label_4")
+
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_4)
 
         self.tooltipIn = QLineEdit(self.scrollAreaWidgetContents)
         self.tooltipIn.setObjectName(u"tooltipIn")
 
-        self.formLayout.setWidget(10, QFormLayout.FieldRole, self.tooltipIn)
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.tooltipIn)
+
+        self.label_5 = QLabel(self.scrollAreaWidgetContents)
+        self.label_5.setObjectName(u"label_5")
+
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_5)
 
         self.horizontalLayout_20 = QHBoxLayout()
         self.horizontalLayout_20.setSpacing(8)
@@ -445,7 +476,28 @@ class Ui_MainWindow(object):
         self.horizontalLayout_20.addItem(self.horizontalSpacer_6)
 
 
-        self.formLayout.setLayout(12, QFormLayout.FieldRole, self.horizontalLayout_20)
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_20)
+
+        self.label_7 = QLabel(self.scrollAreaWidgetContents)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_7)
+
+        self.widgetGroup = QLineEdit(self.scrollAreaWidgetContents)
+        self.widgetGroup.setObjectName(u"widgetGroup")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.widgetGroup)
+
+        self.isContainerCb = QCheckBox(self.scrollAreaWidgetContents)
+        self.isContainerCb.setObjectName(u"isContainerCb")
+        self.isContainerCb.setIconSize(QSize(32, 32))
+
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.isContainerCb)
+
+        self.label_6 = QLabel(self.scrollAreaWidgetContents)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.label_6)
 
         self.horizontalLayout_21 = QHBoxLayout()
         self.horizontalLayout_21.setSpacing(8)
@@ -469,58 +521,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.addWidget(self.addToExistingCb)
 
 
-        self.formLayout.setLayout(14, QFormLayout.FieldRole, self.horizontalLayout_21)
+        self.formLayout.setLayout(9, QFormLayout.FieldRole, self.horizontalLayout_21)
 
-        self.label_7 = QLabel(self.scrollAreaWidgetContents)
-        self.label_7.setObjectName(u"label_7")
+        self.addMenuCb = QCheckBox(self.scrollAreaWidgetContents)
+        self.addMenuCb.setObjectName(u"addMenuCb")
 
-        self.formLayout.setWidget(16, QFormLayout.LabelRole, self.label_7)
-
-        self.widgetGroup = QLineEdit(self.scrollAreaWidgetContents)
-        self.widgetGroup.setObjectName(u"widgetGroup")
-
-        self.formLayout.setWidget(16, QFormLayout.FieldRole, self.widgetGroup)
-
-        self.isContainerCb = QCheckBox(self.scrollAreaWidgetContents)
-        self.isContainerCb.setObjectName(u"isContainerCb")
-        self.isContainerCb.setIconSize(QSize(32, 32))
-
-        self.formLayout.setWidget(19, QFormLayout.FieldRole, self.isContainerCb)
-
-        self.label_5 = QLabel(self.scrollAreaWidgetContents)
-        self.label_5.setObjectName(u"label_5")
-
-        self.formLayout.setWidget(12, QFormLayout.LabelRole, self.label_5)
-
-        self.label_4 = QLabel(self.scrollAreaWidgetContents)
-        self.label_4.setObjectName(u"label_4")
-
-        self.formLayout.setWidget(10, QFormLayout.LabelRole, self.label_4)
-
-        self.label_8 = QLabel(self.scrollAreaWidgetContents)
-        self.label_8.setObjectName(u"label_8")
-
-        self.formLayout.setWidget(8, QFormLayout.LabelRole, self.label_8)
-
-        self.label_9 = QLabel(self.scrollAreaWidgetContents)
-        self.label_9.setObjectName(u"label_9")
-
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_9)
-
-        self.label_2 = QLabel(self.scrollAreaWidgetContents)
-        self.label_2.setObjectName(u"label_2")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_2)
-
-        self.label = QLabel(self.scrollAreaWidgetContents)
-        self.label.setObjectName(u"label")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
-
-        self.label_6 = QLabel(self.scrollAreaWidgetContents)
-        self.label_6.setObjectName(u"label_6")
-
-        self.formLayout.setWidget(14, QFormLayout.LabelRole, self.label_6)
+        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.addMenuCb)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -579,14 +585,20 @@ class Ui_MainWindow(object):
         self.minimizeBtn.setStatusTip(QCoreApplication.translate("MainWindow", u"Minimize", None))
 #endif // QT_CONFIG(statustip)
         self.minimizeBtn.setText(QCoreApplication.translate("MainWindow", u"-", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Class Name", None))
 #if QT_CONFIG(statustip)
         self.pluginName.setStatusTip(QCoreApplication.translate("MainWindow", u"Your plugin name", None))
 #endif // QT_CONFIG(statustip)
         self.pluginName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"MyAwedomePlugin", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Qt Class", None))
 #if QT_CONFIG(statustip)
         self.QtClass.setStatusTip(QCoreApplication.translate("MainWindow", u"Qt Class your plugin inherits from", None))
 #endif // QT_CONFIG(statustip)
         self.QtClass.setPlaceholderText(QCoreApplication.translate("MainWindow", u"QWidget", None))
+#if QT_CONFIG(statustip)
+        self.label_9.setStatusTip(QCoreApplication.translate("MainWindow", u"Paths to QtDesigner Plugins", None))
+#endif // QT_CONFIG(statustip)
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Geometry", None))
 #if QT_CONFIG(statustip)
         self.geoX.setStatusTip(QCoreApplication.translate("MainWindow", u"X pos", None))
 #endif // QT_CONFIG(statustip)
@@ -600,20 +612,37 @@ class Ui_MainWindow(object):
         self.geoH.setStatusTip(QCoreApplication.translate("MainWindow", u"Height", None))
 #endif // QT_CONFIG(statustip)
 #if QT_CONFIG(statustip)
+        self.label_8.setStatusTip(QCoreApplication.translate("MainWindow", u"Paths to QtDesigner Plugins", None))
+#endif // QT_CONFIG(statustip)
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Properties", None))
+#if QT_CONFIG(statustip)
         self.propList.setStatusTip(QCoreApplication.translate("MainWindow", u"Right click to add/remove properties", None))
 #endif // QT_CONFIG(statustip)
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tooltip", None))
 #if QT_CONFIG(statustip)
         self.tooltipIn.setStatusTip(QCoreApplication.translate("MainWindow", u"QtDesigner tooltip", None))
 #endif // QT_CONFIG(statustip)
         self.tooltipIn.setText("")
         self.tooltipIn.setPlaceholderText(QCoreApplication.translate("MainWindow", u"My plugin is...", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Icon", None))
         self.newPIcon.setText("")
 #if QT_CONFIG(statustip)
         self.newPIconBrowse.setStatusTip(QCoreApplication.translate("MainWindow", u"Select image file -> will be converted to .ico", None))
 #endif // QT_CONFIG(statustip)
         self.newPIconBrowse.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Group", None))
 #if QT_CONFIG(statustip)
-        self.regPath.setStatusTip(QCoreApplication.translate("MainWindow", u"Plugin path or registry file", None))
+        self.widgetGroup.setStatusTip(QCoreApplication.translate("MainWindow", u"Group name in QtDesigner Widget box", None))
+#endif // QT_CONFIG(statustip)
+        self.widgetGroup.setText("")
+        self.widgetGroup.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Custom Widgets", None))
+#if QT_CONFIG(statustip)
+        self.isContainerCb.setStatusTip(QCoreApplication.translate("MainWindow", u"Will it contain other widgets?", None))
+#endif // QT_CONFIG(statustip)
+        self.isContainerCb.setText(QCoreApplication.translate("MainWindow", u"Is Container", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Registry", None))
+#if QT_CONFIG(statustip)
+        self.regPath.setStatusTip(QCoreApplication.translate("MainWindow", u"Files path", None))
 #endif // QT_CONFIG(statustip)
         self.regPath.setText("")
         self.regPath.setPlaceholderText(QCoreApplication.translate("MainWindow", u"C:\\path\\to\\plugin\\registration", None))
@@ -625,31 +654,9 @@ class Ui_MainWindow(object):
         self.addToExistingCb.setStatusTip(QCoreApplication.translate("MainWindow", u"Add to an existing register ", None))
 #endif // QT_CONFIG(statustip)
         self.addToExistingCb.setText(QCoreApplication.translate("MainWindow", u"Add to Existing", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Group", None))
+        self.addMenuCb.setText(QCoreApplication.translate("MainWindow", u"Add Menu", None))
 #if QT_CONFIG(statustip)
-        self.widgetGroup.setStatusTip(QCoreApplication.translate("MainWindow", u"Group name in QtDesigner Widget box", None))
-#endif // QT_CONFIG(statustip)
-        self.widgetGroup.setText("")
-        self.widgetGroup.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Custom Widgets", None))
-#if QT_CONFIG(statustip)
-        self.isContainerCb.setStatusTip(QCoreApplication.translate("MainWindow", u"Will it contain other widgets?", None))
-#endif // QT_CONFIG(statustip)
-        self.isContainerCb.setText(QCoreApplication.translate("MainWindow", u"Is Container", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Icon", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tooltip", None))
-#if QT_CONFIG(statustip)
-        self.label_8.setStatusTip(QCoreApplication.translate("MainWindow", u"Paths to QtDesigner Plugins", None))
-#endif // QT_CONFIG(statustip)
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Properties", None))
-#if QT_CONFIG(statustip)
-        self.label_9.setStatusTip(QCoreApplication.translate("MainWindow", u"Paths to QtDesigner Plugins", None))
-#endif // QT_CONFIG(statustip)
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Geometry", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Qt Class", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Class Name", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Registry", None))
-#if QT_CONFIG(statustip)
-        self.createPluginBtn.setStatusTip(QCoreApplication.translate("MainWindow", u"Create a new project", None))
+        self.createPluginBtn.setStatusTip(QCoreApplication.translate("MainWindow", u"Create Plugin", None))
 #endif // QT_CONFIG(statustip)
         self.createPluginBtn.setText(QCoreApplication.translate("MainWindow", u"Create Plugin", None))
 #if QT_CONFIG(shortcut)

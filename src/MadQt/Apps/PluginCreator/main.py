@@ -13,8 +13,8 @@ from MadQt import Tools as Mt
 # pyside6-rcc resources.qrc -o resources_rc.py
 
 # To use only in development
-from pyside6_loader import PySide6Ui
-PySide6Ui('gui.ui').toPy()
+# from pyside6_loader import PySide6Ui
+# PySide6Ui('gui.ui').toPy()
 
 import gui
 
@@ -44,6 +44,35 @@ class ThreadF(QThread):
         self.func(self.parent(),*self.args,**self.kwargs)
         self.quit()
 
+class ParamDialog(QDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle('Add Property')
+        layout = QVBoxLayout(self)
+
+        self._prop_name = QLineEdit(self)
+        self._prop_name.setPlaceholderText('propertyName')
+        self._prop_name.setToolTip('Property Name')
+        self._prop_type = QComboBox(self)
+        self._prop_type.setToolTip('Property Type')
+        self._prop_type.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        self._prop_type.addItems(['str','int','float','bool'])
+        self._prop_default = QLineEdit(self)
+        self._prop_default.setPlaceholderText("None")
+        self._prop_default.setToolTip('Default value')
+
+        layout.addWidget(self._prop_name)
+        layout.addWidget(self._prop_type)
+        layout.addWidget(self._prop_default)
+
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel)
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+
+        layout.addWidget(button_box)
+
+
+
 class App(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -53,6 +82,7 @@ class App(QMainWindow):
         self.ui.setupUi(self)
         self.selectedIcon=None
         self.threads = []
+        self.properties = []
         self.prevGeo = self.geometry()
         self.settings = QSettings("Mad Pony Interactive", "MadQt | Plugin Maker")
         self.initUi()
@@ -136,10 +166,8 @@ class App(QMainWindow):
         self.ui.header.installEventFilter(self)
         self.ui.statusbar.insertPermanentWidget(0,QLabel('V.0.0.1'),0)
 
-        properties = self.settings.value("usrInput/properties", [])
-        [self.ui.propList.addItem(prop) for prop in properties]
-
         self.ui.pluginName.textChanged.connect(self.pluginNameChanged)
+        self.ui.QtClass.textChanged.connect(self.qtClassChanged)
 
         self.ui.regOpen.clicked.connect(self.openReg)
 
@@ -150,6 +178,8 @@ class App(QMainWindow):
         if add:self.ui.addToExistingCb.setChecked(add)
 
         self.ui.newPIconBrowse.pressed.connect(self.openImg)
+
+        self.ui.createPluginBtn.clicked.connect(self.submit)
 
 
     # Helper Dialogues
@@ -178,7 +208,7 @@ class App(QMainWindow):
             if '.ico' not in file:
                 dest_ico = os.path.join(tempDir(),'logo.ico')
                 file = Mt.createIco(file,dest_ico,self.defaultIcoSize())
-            self.ui.newPIconBrowse.setPixmap(QPixmap(file))
+            self.ui.newPIcon.setPixmap(QPixmap(file))
             self.selectedIcon = file
 
     def labelBox(self,msg,text):
@@ -195,62 +225,72 @@ class App(QMainWindow):
             file = self.openFile('Registry File (*.py)')[0]
         else:
             file = self.openFolder(self.ui.regPath)
-        if len(file):
+        if file:
             self.ui.regPath.setText(file)
             self.settings.setValue("usrInput/regPath",file)
 
     def addProperty(self):
-        p_name = self.labelBox('msg','text')
-        if p_name:
-            properties = self.settings.value("usrInput/properties",[])
-            properties.append(p_name)
-            self.settings.setValue("usrInput/properties",properties)
-            self.ui.propList.addItem(p_name)
+        dialog = ParamDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            p_name=dialog._prop_name.text()
+            p_type=dialog._prop_type.currentText()
+            p_default=dialog._prop_default.text() or 'None'
+            if not p_name:return
+            prop = f"{p_name}({p_type}) = {p_default}"
+            self.ui.propList.addItem(prop)
+            self.properties.append({
+                'name':p_name,
+                'type':p_type,
+                'default':p_default
+                })
 
     def removeProperty(self):
-        properties = self.settings.value("usrInput/properties",[])
         removed = self.ui.propList.removeCurrentItem()
-        for prop in properties:
-            if prop == removed.text():
-                properties.remove(prop)
+        for prop in self.properties:
+            if f"{prop['name']}({prop['type']}) = {prop['default']}" == removed.text():
+                self.properties.remove(prop)
                 break
-        self.settings.setValue("usrInput/properties",properties)
 
     def pluginNameChanged(self,text):
-        self.ui.pluginName.setText(text[0].upper() + text[1:])
+        if text:self.ui.pluginName.setText(Mt.cleanString(text[0].upper() + text[1:]))
+
+    def qtClassChanged(self,text):
+        if text:
+            if text[0] != 'Q':
+                self.ui.QtClass.setText('Q' + text[1:])
 
     def submit(self):
+        self.ui.statusbar.showMessage('Getting things ready...')
+
         pluginName=self.ui.pluginName.text()
-        pluginName=pluginName if pluginName else self.ui.pluginName.placeholderText()
+        pluginName=pluginName or self.ui.pluginName.placeholderText()
 
         QtClass=self.ui.QtClass.text()
-        QtClass=QtClass if QtClass else self.ui.QtClass.placeholderText()
+        QtClass=QtClass or self.ui.QtClass.placeholderText()
 
         x=self.ui.geoX
         y=self.ui.geoY
         w=self.ui.geoW
         h=self.ui.geoH
 
-        properties = self.settings.value("usrInput/properties",[])
-
         toolTip=self.ui.tooltipIn.text()
         toolTip=toolTip if toolTip else self.ui.tooltipIn.placeholderText()
 
         mad_icon = os.path.join(MadQt.get_path('Templates'),'NewProject','gui','logo.ico')
-        iconFile = self.selectedIcon if self.selectedIcon else mad_icon
+        iconFile = self.selectedIcon or mad_icon
         if not os.path.isfile(iconFile):
             self.ui.statusbar.showMessage('Error: Provided icon file not valid!')
             return
 
         regFile = self.ui.regPath.text()
-        if not len(regFile):
+        if not regFile:
             self.ui.statusbar.showMessage('Error: Provided registry file not valid!')
             return
 
         addToExisting=self.ui.addToExistingCb.isChecked()
         if addToExisting:
             if not os.path.isfile(regFile) or 'register' not in regFile:
-                self.ui.statusbar.showMessage('Error: Provided registry file not valid!')
+                self.ui.statusbar.showMessage('Error: Provided registry file not valid! Must start with "register"')
                 return
             directory = os.path.dirname(regFile)
         else:
@@ -258,18 +298,140 @@ class App(QMainWindow):
                 self.ui.statusbar.showMessage('Error: Provided registry folder not valid!')
                 return
             directory = regFile
+            regFile = os.path.join(directory,f"register_{pluginName.lower()}.py")
         MadQt.addEnvPath(directory)
 
         group = self.ui.widgetGroup.text()
-        group=group if group else self.ui.widgetGroup.placeholderText()
+        group=group or self.ui.widgetGroup.placeholderText()
 
         isContainer = self.ui.isContainerCb.isChecked()
 
-        # if addToExisting:
-        #     shutil.copy2()
-        # else
+        addMenu = self.ui.addMenuCb.isChecked()
 
+        def prop_type(prop):
+            if prop['type']=='str':return 'string'
+            elif prop['type']=='int':return 'number'
+            elif prop['type']=='float':return 'double'
+            elif prop['type']=='bool':return 'bool'
 
+        # for prop in self.properties:
+        #     prop['name']
+        #     prop['type']
+        #     prop['default']
+
+        # copy template files ---------------------------------------------
+        self.ui.statusbar.showMessage('Copying files...')
+        templateDir = os.path.join(MadQt.get_path('Templates'),'NewPlugin')
+        reg_file_src = os.path.join(templateDir,'register_template.py')
+        widget_file_src = os.path.join(templateDir,'template.py')
+        plugin_file_src = os.path.join(templateDir,'templateplugin.py')
+        menu_file_src = os.path.join(templateDir,'templatetaskmenu.py')
+
+        widget_file_dst = os.path.join(directory,pluginName.lower())
+        plugin_file_dst = os.path.join(directory,pluginName.lower()+'plugin')
+        menu_file_dst = os.path.join(directory,pluginName.lower()+'taskmenu')
+
+        if addToExisting:# register
+            self.ui.statusbar.showMessage('Editing registry file...')
+            with open(regFile,"a") as f:
+                f.write(F"    QPyDesignerCustomWidgetCollection.addCustomWidget({pluginName}Plugin())\n")
+        else:# copy register template
+            shutil.copy2(reg_file_src,regFile)
+        shutil.copy2(widget_file_src,widget_file_dst)
+        shutil.copy2(plugin_file_src,plugin_file_dst)
+        if addMenu: shutil.copy2(menu_file_src,menu_file_dst)
+
+        # Widget File-----------------------------------------------
+        self.ui.statusbar.showMessage('Editing widget file...')
+        for line in fileinput.input(widget_file_dst, inplace=1):
+            if 'Template' in line:
+                line = line.replace('Template', pluginName)
+            if 'QWidget' in line:
+                line = line.replace('QWidget', QtClass)
+            if 'QSize(200, 200)' in line:
+                line = line.replace('QSize(200, 200)', f'QSize({w}, {h})')
+            if '#PROPERTY_VALUES#' in line:
+                cnt=""
+                for prop in self.properties:
+                    if prop['type']=='str':
+                        cnt+=f"        self._{prop['name']} = '{prop['default']}'\n"
+                    else:
+                        cnt+=f"        self._{prop['name']} = {prop['default']}\n"
+                line = line.replace("        #PROPERTY_VALUES#",cnt)
+            if '#PROPERTY_SETTER#' in line:
+                cnt=""
+                for prop in self.properties:
+                    cnt+=f"    def set{prop['name'][0].upper()+prop['name'][1:]}(self, new_{prop['name']}):\n"
+                    cnt+=f"        self._{prop['name']} = new_{prop['name']}\n"
+                line = line.replace("    #PROPERTY_SETTER#",cnt)
+            if '#PROPERTY_GETTER#' in line:
+                cnt=""
+                for prop in self.properties:
+                    cnt+=f"    def {prop['name']}(self):\n"
+                    cnt+=f"        return self._{prop['name']}\n"
+                line = line.replace("    #PROPERTY_GETTER#",cnt)
+            if '#PROPERTY_ASSIGN# ' in line:
+                cnt=""
+                for prop in self.properties:
+                    cnt+=f"    {prop['name']} = Property({prop['type']}, {prop['name']}, set{prop['name'][0].upper()+prop['name'][1:]})\n"
+                line = line.replace("    #PROPERTY_ASSIGN#",cnt)
+            sys.stdout.write(line)
+
+        # Plugin File-----------------------------------------------
+        self.ui.statusbar.showMessage('Editing plugin file...')
+        for line in fileinput.input(plugin_file_dst, inplace=1):
+            if 'Template' in line:
+                line = line.replace('Template', pluginName)
+            if 'template' in line:
+                line = line.replace('template', pluginName.lower())
+            if '<x>0</x>' in line:
+                line = line.replace('<x>0</x>', f'<x>{x}</x>')
+            if '<y>0</y>' in line:
+                line = line.replace('<y>0</y>', f'<y>{y}</y>')
+            if '<width>200</width>' in line:
+                line = line.replace('<width>200</width>', f'<width>{w}</width>')
+            if '<height>200</height>' in line:
+                line = line.replace('<height>200</height>', f'<height>{h}</height>')
+
+            if not addMenu:
+                line = line.replace("from templatetaskmenu import TemplateTaskMenuFactory","")
+                line = line.replace("manager = form_editor.extensionManager()","")
+                line = line.replace("iid = TemplateTaskMenuFactory.task_menu_iid()","")
+                line = line.replace("manager.registerExtensions(TemplateTaskMenuFactory(manager), iid)","")
+
+            if '#XML_PROPERTY# ' in line:
+                cnt=""
+                for prop in self.properties:
+                    cnt+=f"        <property name='{prop['name']}'>\n"
+                    cnt+=f"            <{p_type}>{prop['default']}</{prop_type(prop)}>\n"
+                    cnt+=f"        </property>\n"
+                line = line.replace("        #XML_PROPERTY#",cnt)
+
+            if 'Custom Widgets' in line:
+                line = line.replace('Custom Widgets', group)
+
+            if 'fullIconPath' in line:
+                line = line.replace('fullIconPath', iconFile)
+
+            if 'return False' in line:
+                line = line.replace('return False', isContainer)
+
+            if 'tooltip' in line:
+                line = line.replace('tooltip', toolTip)
+
+            sys.stdout.write(line)
+
+        # Task Menu File-----------------------------------------------
+        if addMenu:
+            self.ui.statusbar.showMessage('Editing task menu file...')
+            for line in fileinput.input(menu_file_dst, inplace=1):
+                if 'Template' in line:
+                    line = line.replace('Template', pluginName)
+                if 'template' in line:
+                    line = line.replace('template', pluginName.lower())
+                sys.stdout.write(line)
+
+        self.ui.statusbar.showMessage('Plugin ready!')
 def main():
     app = QApplication(sys.argv)
     window = App()
