@@ -260,7 +260,7 @@ class App(QMainWindow):
                 self.ui.QtClass.setText('Q' + text[1:])
 
     def submit(self):
-        self.ui.statusbar.showMessage('Getting things ready...')
+        self.setCursor(Qt.BusyCursor)
 
         pluginName=self.ui.pluginName.text()
         pluginName=pluginName or self.ui.pluginName.placeholderText()
@@ -268,19 +268,13 @@ class App(QMainWindow):
         QtClass=self.ui.QtClass.text()
         QtClass=QtClass or self.ui.QtClass.placeholderText()
 
-        x=self.ui.geoX
-        y=self.ui.geoY
-        w=self.ui.geoW
-        h=self.ui.geoH
+        x=self.ui.geoX.value()
+        y=self.ui.geoY.value()
+        w=self.ui.geoW.value()
+        h=self.ui.geoH.value()
 
         toolTip=self.ui.tooltipIn.text()
         toolTip=toolTip if toolTip else self.ui.tooltipIn.placeholderText()
-
-        mad_icon = os.path.join(MadQt.get_path('Templates'),'NewProject','gui','logo.ico')
-        iconFile = self.selectedIcon or mad_icon
-        if not os.path.isfile(iconFile):
-            self.ui.statusbar.showMessage('Error: Provided icon file not valid!')
-            return
 
         regFile = self.ui.regPath.text()
         if not regFile:
@@ -301,6 +295,18 @@ class App(QMainWindow):
             regFile = os.path.join(directory,f"register_{pluginName.lower()}.py")
         MadQt.addEnvPath(directory)
 
+
+        mad_icon = os.path.join(MadQt.get_path('Templates'),'NewProject','gui','logo.ico')
+        iconFile = self.selectedIcon or mad_icon
+        iconFile = os.path.normpath(iconFile)
+        if not os.path.isfile(iconFile):
+            self.ui.statusbar.showMessage('Error: Provided icon file not valid!')
+            return
+        else:
+            iconFile_dst = os.path.join(directory,f"{pluginName.lower()}.ico")
+            shutil.copy2(iconFile,iconFile_dst)
+            iconFile=iconFile_dst
+
         group = self.ui.widgetGroup.text()
         group=group or self.ui.widgetGroup.placeholderText()
 
@@ -314,35 +320,42 @@ class App(QMainWindow):
             elif prop['type']=='float':return 'double'
             elif prop['type']=='bool':return 'bool'
 
-        # for prop in self.properties:
-        #     prop['name']
-        #     prop['type']
-        #     prop['default']
-
         # copy template files ---------------------------------------------
-        self.ui.statusbar.showMessage('Copying files...')
         templateDir = os.path.join(MadQt.get_path('Templates'),'NewPlugin')
         reg_file_src = os.path.join(templateDir,'register_template.py')
         widget_file_src = os.path.join(templateDir,'template.py')
         plugin_file_src = os.path.join(templateDir,'templateplugin.py')
         menu_file_src = os.path.join(templateDir,'templatetaskmenu.py')
 
-        widget_file_dst = os.path.join(directory,pluginName.lower())
-        plugin_file_dst = os.path.join(directory,pluginName.lower()+'plugin')
-        menu_file_dst = os.path.join(directory,pluginName.lower()+'taskmenu')
+        widget_file_dst = os.path.join(directory,pluginName.lower()+'.py')
+        plugin_file_dst = os.path.join(directory,pluginName.lower()+'plugin.py')
+        menu_file_dst = os.path.join(directory,pluginName.lower()+'taskmenu.py')
 
         if addToExisting:# register
-            self.ui.statusbar.showMessage('Editing registry file...')
+            for line in fileinput.input(regFile, inplace=1):
+                if '#EXTRA_IMPORTS#' in line:
+                    cnt="#EXTRA_IMPORTS#\n"
+                    cnt+=f"from {pluginName.lower()} import {pluginName}\n"
+                    cnt+=f"from {pluginName.lower()}plugin import {pluginName}Plugin\n"
+                    line = line.replace('#EXTRA_IMPORTS#', cnt)
+                sys.stdout.write(line)
+
             with open(regFile,"a") as f:
                 f.write(F"    QPyDesignerCustomWidgetCollection.addCustomWidget({pluginName}Plugin())\n")
         else:# copy register template
             shutil.copy2(reg_file_src,regFile)
+            for line in fileinput.input(regFile, inplace=1):
+                if 'Template' in line:
+                    line = line.replace('Template', pluginName)
+                if 'template' in line:
+                    line = line.replace('template', pluginName.lower())
+                sys.stdout.write(line)
+
         shutil.copy2(widget_file_src,widget_file_dst)
         shutil.copy2(plugin_file_src,plugin_file_dst)
         if addMenu: shutil.copy2(menu_file_src,menu_file_dst)
 
         # Widget File-----------------------------------------------
-        self.ui.statusbar.showMessage('Editing widget file...')
         for line in fileinput.input(widget_file_dst, inplace=1):
             if 'Template' in line:
                 line = line.replace('Template', pluginName)
@@ -370,7 +383,7 @@ class App(QMainWindow):
                     cnt+=f"    def {prop['name']}(self):\n"
                     cnt+=f"        return self._{prop['name']}\n"
                 line = line.replace("    #PROPERTY_GETTER#",cnt)
-            if '#PROPERTY_ASSIGN# ' in line:
+            if '#PROPERTY_ASSIGN#' in line:
                 cnt=""
                 for prop in self.properties:
                     cnt+=f"    {prop['name']} = Property({prop['type']}, {prop['name']}, set{prop['name'][0].upper()+prop['name'][1:]})\n"
@@ -378,8 +391,13 @@ class App(QMainWindow):
             sys.stdout.write(line)
 
         # Plugin File-----------------------------------------------
-        self.ui.statusbar.showMessage('Editing plugin file...')
         for line in fileinput.input(plugin_file_dst, inplace=1):
+            if not addMenu:
+                line = line.replace("from templatetaskmenu import TemplateTaskMenuFactory","")
+                line = line.replace("manager = form_editor.extensionManager()","")
+                line = line.replace("iid = TemplateTaskMenuFactory.task_menu_iid()","")
+                line = line.replace("manager.registerExtensions(TemplateTaskMenuFactory(manager), iid)","")
+
             if 'Template' in line:
                 line = line.replace('Template', pluginName)
             if 'template' in line:
@@ -393,17 +411,11 @@ class App(QMainWindow):
             if '<height>200</height>' in line:
                 line = line.replace('<height>200</height>', f'<height>{h}</height>')
 
-            if not addMenu:
-                line = line.replace("from templatetaskmenu import TemplateTaskMenuFactory","")
-                line = line.replace("manager = form_editor.extensionManager()","")
-                line = line.replace("iid = TemplateTaskMenuFactory.task_menu_iid()","")
-                line = line.replace("manager.registerExtensions(TemplateTaskMenuFactory(manager), iid)","")
-
-            if '#XML_PROPERTY# ' in line:
+            if '#XML_PROPERTY#' in line:
                 cnt=""
                 for prop in self.properties:
                     cnt+=f"        <property name='{prop['name']}'>\n"
-                    cnt+=f"            <{p_type}>{prop['default']}</{prop_type(prop)}>\n"
+                    cnt+=f"            <{prop_type(prop)}>{prop['default']}</{prop_type(prop)}>\n"
                     cnt+=f"        </property>\n"
                 line = line.replace("        #XML_PROPERTY#",cnt)
 
@@ -411,10 +423,10 @@ class App(QMainWindow):
                 line = line.replace('Custom Widgets', group)
 
             if 'fullIconPath' in line:
-                line = line.replace('fullIconPath', iconFile)
+                line = line.replace("'fullIconPath'", f"r'{iconFile}'")
 
             if 'return False' in line:
-                line = line.replace('return False', isContainer)
+                line = line.replace('return False', 'return '+str(isContainer))
 
             if 'tooltip' in line:
                 line = line.replace('tooltip', toolTip)
@@ -423,7 +435,6 @@ class App(QMainWindow):
 
         # Task Menu File-----------------------------------------------
         if addMenu:
-            self.ui.statusbar.showMessage('Editing task menu file...')
             for line in fileinput.input(menu_file_dst, inplace=1):
                 if 'Template' in line:
                     line = line.replace('Template', pluginName)
@@ -431,7 +442,7 @@ class App(QMainWindow):
                     line = line.replace('template', pluginName.lower())
                 sys.stdout.write(line)
 
-        self.ui.statusbar.showMessage('Plugin ready!')
+        self.setCursor(Qt.ArrowCursor)
 def main():
     app = QApplication(sys.argv)
     window = App()

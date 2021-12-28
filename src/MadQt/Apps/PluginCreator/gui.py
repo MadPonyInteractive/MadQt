@@ -589,7 +589,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(statustip)
         self.pluginName.setStatusTip(QCoreApplication.translate("MainWindow", u"Your plugin name", None))
 #endif // QT_CONFIG(statustip)
-        self.pluginName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"MyAwedomePlugin", None))
+        self.pluginName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"MyAwesomePlugin", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Qt Class", None))
 #if QT_CONFIG(statustip)
         self.QtClass.setStatusTip(QCoreApplication.translate("MainWindow", u"Qt Class your plugin inherits from", None))
