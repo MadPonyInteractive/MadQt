@@ -7,6 +7,8 @@ nav_order: 0
 
 # Running MadQt Project Manager
 
+***
+
 ##### Prerequisites
 In order to run this application you will need to first
 [install the MadQt pip package.](https://madponyinteractive.github.io/MadQt/get-started.html)
@@ -20,6 +22,7 @@ You should see the MadQt Project Manager
 
 ![image](https://user-images.githubusercontent.com/30872066/146767192-5e3f2ad9-58d3-444c-a39a-3deb8d576b02.png)
 
+***
 
 ### Create a executable for Windows
 1 - Create a new file in a text editor and paste the following code

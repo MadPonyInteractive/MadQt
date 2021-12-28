@@ -10,11 +10,12 @@ This is really a simple process but depending on what you do in your code
 it can go very wrong.
 
 Note:
-
+```
 MadQt Project Manager uses pyinstaller in the background to do this, so it
 is advisable to read trough pyinstaller documentation before structuring
 your scripts. The usual issues are due to unsupported imports, badly formatted
 paths and files that should have been included.
+```
 
 Navigate to the Executable page within your project
 
