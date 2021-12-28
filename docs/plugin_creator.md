@@ -25,9 +25,9 @@ You should see the MadQt Project Manager
 1 - Create a new file in a text and paste the following code
 ```python
 @echo off
-MadQtProjectManager
+MadQtPluginCreator
 ```
-2 - Save the file as project_manager.bat
+2 - Save the file as PluginCreator.bat
 
 Note: Creating a shortcut from this file so that the command line window\
 does not show will stop Project Manager from receiving drag drops.
