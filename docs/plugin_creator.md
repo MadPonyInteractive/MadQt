@@ -8,7 +8,7 @@ A gui application for creating QtDesigner python plugins.
 
 
 ##### Prerequisites
-In order to install this application you will need to first
+In order to run this application you will need to first
 [install the MadQt pip package.](https://madponyinteractive.github.io/MadQt/get-started.html)
 
 In a command line type the following
