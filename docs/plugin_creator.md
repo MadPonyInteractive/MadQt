@@ -20,6 +20,10 @@ You should see the MadQt Project Manager
 
 ![image](https://user-images.githubusercontent.com/30872066/147564757-4022a05d-09b1-46f1-ab56-04056f3b8a38.png)
 
+***
+
+### There's a [video on YouTube](https://www.youtube.com/watch?v=gCK_JRr0lGM) to help you get started.
+[![MadQt Plugin Creator](https://img.youtube.com/vi/NOgbq04L3MA/0.jpg)](https://www.youtube.com/watch?v=NOgbq04L3MA)
 
 ***
 
