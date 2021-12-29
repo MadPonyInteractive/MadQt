@@ -8,16 +8,15 @@ nav_order: 1
 
 ***
 
-### Install
 Once you have Python and pip installed in your system you can
-install MadQt from a command line.
+install and/or MadQt from a command line.
 
+### Install
 ```python
 pip install MadQt
 ```
 
 ### Update
-
 ```python
 pip install --upgrade MadQt
 ```
