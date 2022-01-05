@@ -663,15 +663,15 @@ class Ui:
         return self.parsed.find('widget').get('class')
 
     def add_qrc(self,qrc):
-        """add qrc resource if not added returns bool"""
+        """add qrc resource  returns bool"""
         for inc in self.qrcs_includes():
             qrc_basename = os.path.basename(inc.get('location'))
             if qrc_basename==qrc:return False
         resources = self.parsed.find('resources')
-        if not resources: resources = self.root().append(xml.Element('resources'))
+        if not resources: self.root().append(xml.Element('resources'))
         include = xml.Element('include')
         include.set('location',qrc)
-        resources.append(include)
+        self.root().find('resources').append(include)
         return True
 
     def add_custom_widget(self,_class,qt_class,module):
@@ -808,6 +808,7 @@ class Ui:
         removed_widgets = []
         if cws:
             # remove invalid plugins
+            topLevelWidget = self.root().find('widget').get('class')
             for plugin in self.plugins():
                 if not self.plugin_valid(plugin):
                     cws.remove(plugin)
@@ -816,7 +817,7 @@ class Ui:
                         'module':plugin.find('header').text
                         })
                     for w in self.widgets():
-                        if w.get('class')==plugin.find('class').text:
+                        if topLevelWidget != w.get('class') == plugin.find('class').text:
                             removed_widgets.append(w.attrib)
                             self.get_parent(w).remove(w)
 

@@ -164,7 +164,7 @@ class App(QMainWindow):
 
     def initUi(self):
         self.ui.header.installEventFilter(self)
-        self.ui.statusbar.insertPermanentWidget(0,QLabel('V.0.0.1'),0)
+        self.ui.statusbar.insertPermanentWidget(0,QLabel('V.0.0.2'),0)
 
         self.ui.pluginName.textChanged.connect(self.pluginNameChanged)
         self.ui.QtClass.textChanged.connect(self.qtClassChanged)
@@ -173,6 +173,8 @@ class App(QMainWindow):
 
         reg = self.settings.value("usrInput/regPath",False)
         if reg:self.ui.regPath.setText(reg)
+
+        self.ui.isMultiCb.stateChanged.connect(self.isMultiChanged)
 
         add = self.settings.value("usrInput/addToExisting",False)
         if add:self.ui.addToExistingCb.setChecked(add)
@@ -251,6 +253,12 @@ class App(QMainWindow):
                 self.properties.remove(prop)
                 break
 
+    def isMultiChanged(self,state):
+        self.ui.isContainerCb.setEnabled(not state)
+        self.ui.isContainerCb.setChecked(state)
+        self.ui.addMenuCb.setEnabled(not state)
+        self.ui.addMenuCb.setChecked(state)
+
     def pluginNameChanged(self,text):
         if text:self.ui.pluginName.setText(Mt.cleanString(text[0].upper() + text[1:]))
 
@@ -268,8 +276,6 @@ class App(QMainWindow):
         QtClass=self.ui.QtClass.text()
         QtClass=QtClass or self.ui.QtClass.placeholderText()
 
-        x=self.ui.geoX.value()
-        y=self.ui.geoY.value()
         w=self.ui.geoW.value()
         h=self.ui.geoH.value()
 
@@ -312,6 +318,7 @@ class App(QMainWindow):
 
         isContainer = self.ui.isContainerCb.isChecked()
 
+        multiPage = self.ui.isMultiCb.isChecked()
         addMenu = self.ui.addMenuCb.isChecked()
 
         def prop_type(prop):
@@ -322,14 +329,21 @@ class App(QMainWindow):
 
         # copy template files ---------------------------------------------
         templateDir = os.path.join(MadQt.get_path('Templates'),'NewPlugin')
+
         reg_file_src = os.path.join(templateDir,'register_template.py')
-        widget_file_src = os.path.join(templateDir,'template.py')
-        plugin_file_src = os.path.join(templateDir,'templateplugin.py')
-        menu_file_src = os.path.join(templateDir,'templatetaskmenu.py')
+
+        if multiPage:
+            templateFolder = 'MultiPage'
+        elif addMenu:
+            templateFolder = 'WithTaskMenu'
+        else:
+            templateFolder = 'Simple'
+
+        widget_file_src = os.path.join(templateDir,templateFolder,'template.py')
+        plugin_file_src = os.path.join(templateDir,templateFolder,'templateplugin.py')
 
         widget_file_dst = os.path.join(directory,pluginName.lower()+'.py')
         plugin_file_dst = os.path.join(directory,pluginName.lower()+'plugin.py')
-        menu_file_dst = os.path.join(directory,pluginName.lower()+'taskmenu.py')
 
         if addToExisting:# register
             for line in fileinput.input(regFile, inplace=1):
@@ -353,7 +367,6 @@ class App(QMainWindow):
 
         shutil.copy2(widget_file_src,widget_file_dst)
         shutil.copy2(plugin_file_src,plugin_file_dst)
-        if addMenu: shutil.copy2(menu_file_src,menu_file_dst)
 
         # Widget File-----------------------------------------------
         for line in fileinput.input(widget_file_dst, inplace=1):
@@ -392,38 +405,16 @@ class App(QMainWindow):
 
         # Plugin File-----------------------------------------------
         for line in fileinput.input(plugin_file_dst, inplace=1):
-            if not addMenu:
-                line = line.replace("from templatetaskmenu import TemplateTaskMenuFactory","")
-                line = line.replace("manager = form_editor.extensionManager()","")
-                line = line.replace("iid = TemplateTaskMenuFactory.task_menu_iid()","")
-                line = line.replace("manager.registerExtensions(TemplateTaskMenuFactory(manager), iid)","")
-
             if 'Template' in line:
                 line = line.replace('Template', pluginName)
             if 'template' in line:
                 line = line.replace('template', pluginName.lower())
-            if '<x>0</x>' in line:
-                line = line.replace('<x>0</x>', f'<x>{x}</x>')
-            if '<y>0</y>' in line:
-                line = line.replace('<y>0</y>', f'<y>{y}</y>')
-            if '<width>200</width>' in line:
-                line = line.replace('<width>200</width>', f'<width>{w}</width>')
-            if '<height>200</height>' in line:
-                line = line.replace('<height>200</height>', f'<height>{h}</height>')
-
-            if '#XML_PROPERTY#' in line:
-                cnt=""
-                for prop in self.properties:
-                    cnt+=f"        <property name='{prop['name']}'>\n"
-                    cnt+=f"            <{prop_type(prop)}>{prop['default']}</{prop_type(prop)}>\n"
-                    cnt+=f"        </property>\n"
-                line = line.replace("        #XML_PROPERTY#",cnt)
 
             if 'Custom Widgets' in line:
                 line = line.replace('Custom Widgets', group)
 
-            if 'fullIconPath' in line:
-                line = line.replace("'fullIconPath'", f"r'{iconFile}'")
+            if 'IconName' in line:
+                line = line.replace("IconName", os.path.basename(iconFile))
 
             if 'return False' in line:
                 line = line.replace('return False', 'return '+str(isContainer))
@@ -432,15 +423,6 @@ class App(QMainWindow):
                 line = line.replace('tooltip', toolTip)
 
             sys.stdout.write(line)
-
-        # Task Menu File-----------------------------------------------
-        if addMenu:
-            for line in fileinput.input(menu_file_dst, inplace=1):
-                if 'Template' in line:
-                    line = line.replace('Template', pluginName)
-                if 'template' in line:
-                    line = line.replace('template', pluginName.lower())
-                sys.stdout.write(line)
 
         self.setCursor(Qt.ArrowCursor)
 def main():

@@ -263,7 +263,9 @@ class Project:
         for plugin_mod in close_dict['in_paths']:
             py_name = plugin_mod+'.py'
             # already in widgets folder
-            if os.path.isfile(self.widgetFile(py_name)):continue
+            if os.path.isfile(self.widgetFile(py_name)):
+                os.remove(self.widgetFile(py_name))
+                # continue
             for path in plugin_locations:
                 # don't check widgets folder
                 if path == widget_folder: continue
@@ -306,9 +308,9 @@ class Project:
             msg += F"Plugin Paths(in settings) or in the dev/widgets folder! \n\n"
 
             msg += F"To stop receiving this message: \n"
-            msg += F"- ADD MISSING PLUGINS TO PLUGIN/DEV/WIDGETS \n"
-            msg += F"or\n"
             msg += F"- ADD THE PLUGINS DIRECTORIES TO PLUGIN PATHS \n"
+            msg += F"or\n"
+            msg += F"- ADD MISSING PLUGINS TO PLUGIN/DEV/WIDGETS \n"
             msg += F"or\n"
             msg += F"- REMOVE MISSING PLUGINS FROM UI"
             reply = QMessageBox.information(
@@ -1566,6 +1568,15 @@ class App(QMainWindow):
             if item.name == bname:
                 self.extraMsg(f'Ui with same name: "{bname}" found! Please rename ui!')
                 return
+
+        # Add ui file to dev folder if a dropped or added ui
+        if save:
+            file_in_dev = self.project.guiFile(os.path.basename(file))
+            if not os.path.isfile(file_in_dev):
+                t = os.path.join(tempDir(),os.path.basename(file))
+                # if os.path.isfile(t):os.remove(t)
+                if t != file:shutil.copy2(file,t)
+                file = t
 
         # Add ui to the project ui list
         if not isTemp(file): self.ui.uiList.insertItem(0,UiItem(file))

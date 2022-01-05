@@ -395,17 +395,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.geoX = QSpinBox(self.scrollAreaWidgetContents)
-        self.geoX.setObjectName(u"geoX")
-        self.geoX.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_3 = QLabel(self.scrollAreaWidgetContents)
+        self.label_3.setObjectName(u"label_3")
 
-        self.horizontalLayout.addWidget(self.geoX)
-
-        self.geoY = QSpinBox(self.scrollAreaWidgetContents)
-        self.geoY.setObjectName(u"geoY")
-        self.geoY.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
-
-        self.horizontalLayout.addWidget(self.geoY)
+        self.horizontalLayout.addWidget(self.label_3)
 
         self.geoW = QSpinBox(self.scrollAreaWidgetContents)
         self.geoW.setObjectName(u"geoW")
@@ -415,6 +408,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.geoW)
 
+        self.label_10 = QLabel(self.scrollAreaWidgetContents)
+        self.label_10.setObjectName(u"label_10")
+
+        self.horizontalLayout.addWidget(self.label_10)
+
         self.geoH = QSpinBox(self.scrollAreaWidgetContents)
         self.geoH.setObjectName(u"geoH")
         self.geoH.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
@@ -422,6 +420,10 @@ class Ui_MainWindow(object):
         self.geoH.setValue(100)
 
         self.horizontalLayout.addWidget(self.geoH)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
 
 
         self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
@@ -492,12 +494,12 @@ class Ui_MainWindow(object):
         self.isContainerCb.setObjectName(u"isContainerCb")
         self.isContainerCb.setIconSize(QSize(32, 32))
 
-        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.isContainerCb)
+        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.isContainerCb)
 
         self.label_6 = QLabel(self.scrollAreaWidgetContents)
         self.label_6.setObjectName(u"label_6")
 
-        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.label_6)
+        self.formLayout.setWidget(10, QFormLayout.LabelRole, self.label_6)
 
         self.horizontalLayout_21 = QHBoxLayout()
         self.horizontalLayout_21.setSpacing(8)
@@ -521,12 +523,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.addWidget(self.addToExistingCb)
 
 
-        self.formLayout.setLayout(9, QFormLayout.FieldRole, self.horizontalLayout_21)
+        self.formLayout.setLayout(10, QFormLayout.FieldRole, self.horizontalLayout_21)
 
         self.addMenuCb = QCheckBox(self.scrollAreaWidgetContents)
         self.addMenuCb.setObjectName(u"addMenuCb")
 
-        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.addMenuCb)
+        self.formLayout.setWidget(9, QFormLayout.FieldRole, self.addMenuCb)
+
+        self.isMultiCb = QCheckBox(self.scrollAreaWidgetContents)
+        self.isMultiCb.setObjectName(u"isMultiCb")
+
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.isMultiCb)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -598,16 +605,12 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(statustip)
         self.label_9.setStatusTip(QCoreApplication.translate("MainWindow", u"Paths to QtDesigner Plugins", None))
 #endif // QT_CONFIG(statustip)
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Geometry", None))
-#if QT_CONFIG(statustip)
-        self.geoX.setStatusTip(QCoreApplication.translate("MainWindow", u"X pos", None))
-#endif // QT_CONFIG(statustip)
-#if QT_CONFIG(statustip)
-        self.geoY.setStatusTip(QCoreApplication.translate("MainWindow", u"Y Pos", None))
-#endif // QT_CONFIG(statustip)
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Size Hint", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Width", None))
 #if QT_CONFIG(statustip)
         self.geoW.setStatusTip(QCoreApplication.translate("MainWindow", u"Width", None))
 #endif // QT_CONFIG(statustip)
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Height", None))
 #if QT_CONFIG(statustip)
         self.geoH.setStatusTip(QCoreApplication.translate("MainWindow", u"Height", None))
 #endif // QT_CONFIG(statustip)
@@ -655,6 +658,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(statustip)
         self.addToExistingCb.setText(QCoreApplication.translate("MainWindow", u"Add to Existing", None))
         self.addMenuCb.setText(QCoreApplication.translate("MainWindow", u"Add Menu", None))
+        self.isMultiCb.setText(QCoreApplication.translate("MainWindow", u"Is Multi Page", None))
 #if QT_CONFIG(statustip)
         self.createPluginBtn.setStatusTip(QCoreApplication.translate("MainWindow", u"Create Plugin", None))
 #endif // QT_CONFIG(statustip)
