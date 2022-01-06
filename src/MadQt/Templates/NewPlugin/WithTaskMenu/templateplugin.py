@@ -58,8 +58,11 @@ from template import Template
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLineEdit
-from PySide6.QtDesigner import (QExtensionManager, QExtensionFactory,
-    QDesignerCustomWidgetInterface, QPyDesignerTaskMenuExtension)
+from PySide6.QtDesigner import (QExtensionManager,
+    QExtensionFactory,
+    QDesignerCustomWidgetInterface,
+    QPyDesignerTaskMenuExtension,
+    QDesignerFormWindowInterface)
 
 # Extension Type | Id
 E_ID = {

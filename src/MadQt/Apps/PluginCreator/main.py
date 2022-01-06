@@ -393,13 +393,14 @@ class App(QMainWindow):
             if '#PROPERTY_GETTER#' in line:
                 cnt=""
                 for prop in self.properties:
-                    cnt+=f"    def {prop['name']}(self):\n"
+                    cnt+=f"    def get{prop['name'][0].upper()+prop['name'][1:]}(self):\n"
                     cnt+=f"        return self._{prop['name']}\n"
                 line = line.replace("    #PROPERTY_GETTER#",cnt)
             if '#PROPERTY_ASSIGN#' in line:
                 cnt=""
                 for prop in self.properties:
-                    cnt+=f"    {prop['name']} = Property({prop['type']}, {prop['name']}, set{prop['name'][0].upper()+prop['name'][1:]})\n"
+                    pUpper = prop['name'][0].upper()+prop['name'][1:]
+                    cnt+=f"    {prop['name']} = Property({prop['type']}, get{pUpper}, set{pUpper})\n"
                 line = line.replace("    #PROPERTY_ASSIGN#",cnt)
             sys.stdout.write(line)
 

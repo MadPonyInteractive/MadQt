@@ -47,6 +47,7 @@ class Template(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        #PROPERTY_VALUES#
         self._pages = []
         self._currentIndex = -1
 
@@ -77,6 +78,10 @@ class Template(QWidget):
         # Adding buttons layout to main layout
         l.addLayout(bl)
         l.setAlignment(bl,Qt.AlignRight)
+
+    #PROPERTY_SETTER#
+
+    #PROPERTY_GETTER#
 
     @Slot()# this will insure this method will show in QtDesigner slots
     def nextPage(self):
@@ -194,6 +199,7 @@ class Template(QWidget):
 
     currentIndex = Property(int, getCurrentIndex, setCurrentIndex)
     currentPageName = Property(str, getPageName, setPageName, stored=False)
+    #PROPERTY_ASSIGN#
 
 if __name__ == '__main__':
     import sys
