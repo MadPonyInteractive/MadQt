@@ -68,9 +68,9 @@ To shorten the access to your widget you can add your widget to the
 ```python
 from __future__ import absolute_import
 from MadQt.Widgets.hover_text_button.htbutton import HtButton
-from MadQt.Widgets.another_widget.another import AnotherClass# <<< HERE
+from MadQt.Widgets.another_widget.another import Another# <<< HERE
 
-__all__ = [HtButton,AnotherClass]# <<< AND HERE
+__all__ = [HtButton,Another]# <<< AND HERE
 ```
 
 If your widget does not have a plugin skip to [STEP 8](add_plugins.html#step-8---document-your-widget)|
