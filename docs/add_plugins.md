@@ -73,7 +73,7 @@ from MadQt.Widgets.another_widget.another import AnotherClass# <<< HERE
 __all__ = [HtButton,AnotherClass]# <<< AND HERE
 ```
 
-##### If your widget does not have a plugin skip to [STEP 8](add_plugins.html#step-8---document-your-widget)
+If your widget does not have a plugin skip to [STEP 8](add_plugins.html#step-8---document-your-widget)|
 
 ***
 
