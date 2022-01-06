@@ -1,7 +1,8 @@
 ---
 layout: default
 title: HtButton
-parent: Widgets
+grand-parent: Widgets
+parent: Buttons
 ---
 
 # HtButton
