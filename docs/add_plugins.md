@@ -140,6 +140,8 @@ Drag and drop the folder to your forked version of MadQt into the directory MadQ
 
 Add a description saying something like new plugin submission and press commit.
 
+***
+
 #### STEP 7 - EDIT REGISTER_ALL.PY
 In MadQt/QtDesignerPlugins/ you will find a file called "register_all.py"
 
@@ -187,6 +189,8 @@ Navigate to the topmost folder in your forked repository and press
 On the new page that pops, press "Create pull request"
 
 Add the details of your new plugin and press "Create pull request"
+
+***
 
 #### STEP 10 - WAIT FOR REVIEW
 You are all done, now all you need is patience and wait for us to
