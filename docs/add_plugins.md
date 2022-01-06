@@ -114,7 +114,29 @@ Drag and drop the folder to your forked version of MadQt into the directory MadQ
 
 Add a description saying something like new plugin submission and press commit.
 
-#### STEP 6 - CREATE A PULL REQUEST
+#### STEP 6 - EDIT REGISTER_ALL.PY
+In MadQt/QtDesignerPlugins/ you will find a file called "register_all.py"
+
+You must add your widget and plugin to it
+```python
+from PySide6.QtDesigner import QPyDesignerCustomWidgetCollection
+
+# A QPushButton that changes text when hovered
+from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.QtDesignerPlugins.hover_text_button.htbuttonplugin import HtButtonPlugin
+
+# Another widget/plugin bla bla bla
+from MadQt.Widgets.another_widget.another import Another
+from MadQt.QtDesignerPlugins.another_widget.anotherplugin import AnotherPlugin
+
+if __name__ == '__main__':
+    QPyDesignerCustomWidgetCollection.addCustomWidget(HtButtonPlugin())
+    QPyDesignerCustomWidgetCollection.addCustomWidget(AnotherPlugin())
+
+```
+Notice the way we are importing from MadQt
+
+#### STEP 7 - CREATE A PULL REQUEST
 Navigate to the topmost folder in your forked repository and press
 "New pull request" button.
 
@@ -122,7 +144,7 @@ On the new page that pops, press "Create pull request"
 
 Add the details of your new plugin and press "Create pull request"
 
-#### STEP 7 - WAIT FOR REVIEW
+#### STEP 8 - WAIT FOR REVIEW
 You are all done, now all you need is patience and wait for us to
 review and accept your new plugin.
 
