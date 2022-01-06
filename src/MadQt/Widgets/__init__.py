@@ -70,4 +70,8 @@
     ##
     ## $QT_END_LICENSE$
 """
+from __future__ import absolute_import
 
+from MadQt.Widgets.hover_text_button.htbutton import HtButton
+
+__all__ = [HtButton]
