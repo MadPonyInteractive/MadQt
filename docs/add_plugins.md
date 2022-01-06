@@ -67,12 +67,10 @@ To shorten the access to your widget you can add your widget to the
 
 ```python
 from __future__ import absolute_import
-
 from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets.another_widget.another import AnotherClass# <<< HERE
 
-from MadQt.Widgets.another_widget.another import AnotherClass
-
-__all__ = [HtButton,AnotherClass]
+__all__ = [HtButton,AnotherClass]# <<< AND HERE
 ```
 
 ##### If your widget does not have a plugin skip to [STEP 8](add_plugins.html#step-8---document-your-widget)
@@ -153,13 +151,13 @@ from PySide6.QtDesigner import QPyDesignerCustomWidgetCollection
 from MadQt.Widgets.hover_text_button.htbutton import HtButton
 from MadQt.QtDesignerPlugins.hover_text_button.htbuttonplugin import HtButtonPlugin
 
-# Another widget/plugin bla bla bla
-from MadQt.Widgets.another_widget.another import Another
-from MadQt.QtDesignerPlugins.another_widget.anotherplugin import AnotherPlugin
+# Another widget/plugin bla bla bla # <<< HERE
+from MadQt.Widgets.another_widget.another import Another # <<< HERE
+from MadQt.QtDesignerPlugins.another_widget.anotherplugin import AnotherPlugin # <<< HERE
 
 if __name__ == '__main__':
     QPyDesignerCustomWidgetCollection.addCustomWidget(HtButtonPlugin())
-    QPyDesignerCustomWidgetCollection.addCustomWidget(AnotherPlugin())
+    QPyDesignerCustomWidgetCollection.addCustomWidget(AnotherPlugin())# <<< AND HERE
 
 ```
 Notice the way we are importing from MadQt
