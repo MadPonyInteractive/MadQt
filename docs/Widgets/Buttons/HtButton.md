@@ -31,11 +31,11 @@ Fabio Goncalves
 
 | Methods |
 |:----------|
-|def [setHoveredText()](HtButton.html#setHoveredText)|
-|def [getHoveredText()](HtButton.html#getHoveredText)|
-|def [setDefaultText()](HtButton.html#setDefaultText)|
-|def [getDefaultText()](HtButton.html#getDefaultText)|
-|def [getHovered()](HtButton.html#getHovered)|
+|def [setHoveredText()](HtButton.html#sethoveredtext)|
+|def [getHoveredText()](HtButton.html#gethoveredtext)|
+|def [setDefaultText()](HtButton.html#setdefaulttext)|
+|def [getDefaultText()](HtButton.html#getdefaulttext)|
+|def [getHovered()](HtButton.html#gethovered)|
 
 ***
 
