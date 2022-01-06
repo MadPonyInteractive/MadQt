@@ -39,7 +39,7 @@ Fabio Goncalves
 
 ***
 
-### Detailed Description
+## Detailed Description
 HtButton is a handy little button that uses the enterEvent and the leaveEvent
 to set a property (hovered) based on if the button is hovered by the mouse.
 
@@ -54,7 +54,7 @@ button.setHoveredText("It's me, MARIO!")
 
 ***
 
-## setHoveredText
+### setHoveredText
 * Parameters
     * **new_hoveredText** - `str`
 
@@ -62,7 +62,7 @@ Sets the text to display when the button is hovered. |
 
 ***
 
-## getHoveredText
+### getHoveredText
 * Return type
     * `str`
 
@@ -70,7 +70,7 @@ Returns text displayed when button is hovered. |
 
 ***
 
-## setDefaultText
+### setDefaultText
 * Parameters
     * **new_defaultText** - `str`
 
@@ -78,7 +78,7 @@ Sets the text to display when the button is not hovered. |
 
 ***
 
-## getDefaultText
+### getDefaultText
 * Return type
     * `str`
 
@@ -86,7 +86,7 @@ Returns text displayed when button is not hovered. |
 
 ***
 
-## getHovered
+### getHovered
 * Return type
     * `bool`
 
