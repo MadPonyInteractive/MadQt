@@ -13,7 +13,7 @@ A QPushButton with a hovered state and text
 Fabio Goncalves
 
 ### Contact
-https://github.com/MadPonyInteractive
+[GitHub Page](https://github.com/MadPonyInteractive)
 
 | QtDesigner Plugin? | Yes |
 
