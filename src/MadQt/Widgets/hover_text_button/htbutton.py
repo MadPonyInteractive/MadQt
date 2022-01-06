@@ -60,7 +60,6 @@ class HtButton(QPushButton):
         self._hovered = False
         self.hoverStateChanged.emit(False)
 
-    # hovered = Property(bool, getHovered, setHovered)
     defaultText = Property(str, getDefaultText, setDefaultText)
     hoveredText = Property(str, getHoveredText, setHoveredText)
     hovered = Property(bool, getHovered, setHovered)
