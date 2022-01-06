@@ -1,3 +1,5 @@
 include LICENSE
 recursive-include src/MadQt/scripts *.exe *.py
 recursive-include src/MadQt/Templates *.ico *.qrc *.py *.ui
+recursive-include src/MadQt/QtDesignerPlugins *.ico *.py
+recursive-include src/MadQt/Widgets *.py
