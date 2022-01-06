@@ -2,6 +2,7 @@
 layout: default
 title: HtButton
 parent: Buttons
+grand_parent: Widgets
 ---
 
 # HtButton
