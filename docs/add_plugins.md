@@ -114,7 +114,7 @@ Drag and drop the folder to your forked version of MadQt into the directory MadQ
 
 Add a description saying something like new plugin submission and press commit.
 
-#### STEP 5 - CREATE A PULL REQUEST
+#### STEP 6 - CREATE A PULL REQUEST
 Navigate to the topmost folder in your forked repository and press
 "New pull request" button.
 
@@ -122,7 +122,7 @@ On the new page that pops, press "Create pull request"
 
 Add the details of your new plugin and press "Create pull request"
 
-#### STEP 6 - WAIT FOR REVIEW
+#### STEP 7 - WAIT FOR REVIEW
 You are all done, now all you need is patience and wait for us to
 review and accept your new plugin.
 
