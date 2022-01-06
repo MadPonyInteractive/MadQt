@@ -5,7 +5,7 @@ parent: Buttons
 grand_parent: Widgets
 ---
 
-# HtButton
+# MadQt.Widgets.HtButton
 #### Version: 0.0.1
 A QPushButton with a hovered state and text
 
