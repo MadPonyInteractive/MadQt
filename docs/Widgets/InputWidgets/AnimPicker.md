@@ -10,6 +10,9 @@ grand_parent: Widgets
 AnimPicker is a QDialog based on the PySide6 QEasing animation example
 that allows for a user to pick animation curves and parameters.
 
+![image](https://user-images.githubusercontent.com/30872066/148591426-3cc8db1e-0531-4a78-baf2-21f6bd336593.png)
+
+
 ### Contributors
 Fabio Goncalves
 
