@@ -56,10 +56,9 @@ Fabio Goncalves
 ***
 
 ## Detailed Description
-HtButton is a handy little button that uses the enterEvent and the leaveEvent
-to set a property (hovered) based on if the button is hovered by the mouse.
+With this container you can easily animate any widget even within QtDesigner.
 
-I also allows for setting text for when the button is hovered.
+Will post a video soon...
 
 ```python
 from MadQt.Widgets import Expander
