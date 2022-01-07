@@ -11,7 +11,7 @@ import os
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # Importing from the MadQt package Widgets folder
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets import HtButton
 
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
@@ -49,7 +49,7 @@ class HtButtonPlugin(QObject, QDesignerCustomWidgetInterface):
 
     def includeFile(self):
         # Importing from the MadQt package Widgets folder
-        return 'MadQt.Widgets.hover_text_button.htbutton'
+        return 'MadQt.Widgets.htbutton'
 
     def initialize(self, form_editor):
         self._form_editor = form_editor

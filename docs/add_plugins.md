@@ -45,17 +45,9 @@ Description: A QPushButton with a hovered state and text
 ***
 
 #### STEP 3 - ADD YOUR WIDGET
-In your system create a folder that best describes your widget or simply use your widget name
-if that makes sense.\
-In our case we named our folder "hover_text_button"
+Drag and drop your widget file to your forked version of MadQt into the directory MadQt/Widgets/
 
-In that folder place your widget file \
 In our case it was "htbutton.py"
-
-- hover_text_button
-    - htbutton.py
-
-Drag and drop the folder to your forked version of MadQt into the directory MadQt/Widgets/
 
 Add a description saying something like new widget submission and press commit.
 
@@ -67,8 +59,8 @@ To shorten the access to your widget you can add your widget to the
 
 ```python
 from __future__ import absolute_import
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
-from MadQt.Widgets.another_widget.another import Another# <<< HERE
+from MadQt.Widgets.htbutton import HtButton
+from MadQt.Widgets.another import Another# <<< HERE
 
 __all__ = [HtButton,Another]# <<< AND HERE
 ```
@@ -102,7 +94,7 @@ from htbutton import HtButton
 After
 ```python
 # Importing from the MadQt package Widgets folder
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets import HtButton
 ```
 As you can see we are now importing from the MadQt/Widgets/hover_text_button
 folder that we previously created.
@@ -120,7 +112,7 @@ After:
 ```python
     def includeFile(self):
         # Importing from the MadQt package Widgets folder
-        return 'MadQt.Widgets.hover_text_button.htbutton'
+        return 'MadQt.Widgets.htbutton'
 ```
 
 ***
@@ -150,11 +142,11 @@ You must add your widget and plugin to it
 from PySide6.QtDesigner import QPyDesignerCustomWidgetCollection
 
 # A QPushButton that changes text when hovered
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets import HtButton
 from MadQt.QtDesignerPlugins.hover_text_button.htbuttonplugin import HtButtonPlugin
 
 # Another widget/plugin bla bla bla # <<< HERE
-from MadQt.Widgets.another_widget.another import Another # <<< HERE
+from MadQt.Widgets import Another # <<< HERE
 from MadQt.QtDesignerPlugins.another_widget.anotherplugin import AnotherPlugin # <<< HERE
 
 if __name__ == '__main__':

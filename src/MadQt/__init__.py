@@ -102,5 +102,5 @@ def addEnvPath(path_to_set=None):
     # print(os.getenv(envVar))
 addEnvPath()
 
-__version__ = "0.0.29"
+__version__ = "0.0.30"
 __author__ = 'Fabio Goncalves'

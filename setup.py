@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.29',
+    version='0.0.30',
     description='Tutorials and Tools for PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",

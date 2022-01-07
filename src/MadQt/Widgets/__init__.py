@@ -72,6 +72,8 @@
 """
 from __future__ import absolute_import
 
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets.htbutton import HtButton
+from MadQt.Widgets.anim_picker import AnimPicker
+from MadQt.Widgets.expander import Expander
 
-__all__ = [HtButton]
+__all__ = [HtButton,AnimPicker,Expander]

@@ -73,8 +73,13 @@
 from PySide6.QtDesigner import QPyDesignerCustomWidgetCollection
 
 # A QPushButton that changes text when hovered
-from MadQt.Widgets.hover_text_button.htbutton import HtButton
+from MadQt.Widgets import HtButton
 from MadQt.QtDesignerPlugins.hover_text_button.htbuttonplugin import HtButtonPlugin
+
+# An Expandable and animated container
+from MadQt.Widgets import Expander
+from MadQt.QtDesignerPlugins.expander.expanderplugin import ExpanderPlugin
 
 if __name__ == '__main__':
     QPyDesignerCustomWidgetCollection.addCustomWidget(HtButtonPlugin())
+    QPyDesignerCustomWidgetCollection.addCustomWidget(ExpanderPlugin())
