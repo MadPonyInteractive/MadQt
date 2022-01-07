@@ -153,6 +153,10 @@ class TaskMenu(QPyDesignerTaskMenuExtension):
             form = QDesignerFormWindowInterface.findFormWindow(w)
             if form:
                 form.cursor().setWidgetProperty(w, "curve", dialog.curve())
+                form.cursor().setWidgetProperty(w, "duration", dialog.duration())
+                form.cursor().setWidgetProperty(w, "period", dialog.period())
+                form.cursor().setWidgetProperty(w, "amplitude", dialog.amplitude())
+                form.cursor().setWidgetProperty(w, "overshoot", dialog.overshoot())
 
 #============================================================================#
 # CustomWidgetPlugin                                                         #

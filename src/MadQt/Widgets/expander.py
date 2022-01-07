@@ -170,7 +170,7 @@ class Expander(QWidget):
         else:
             self._anim.setLoopCount(1)
 
-    @Property(int, designable=False)
+    @Property(int)
     def duration(self):
         return self._duration
 
@@ -179,7 +179,7 @@ class Expander(QWidget):
         self._duration = val
         self._anim.setDuration(val)
 
-    @Property(float, designable=False)
+    @Property(float)
     def period(self):
         return self._period
 
@@ -191,7 +191,7 @@ class Expander(QWidget):
         self._period = val
         self._anim.setEasingCurve(curve)
 
-    @Property(float, designable=False)
+    @Property(float)
     def amplitude(self):
         return self._amplitude
 
@@ -203,7 +203,7 @@ class Expander(QWidget):
         self._amplitude = val
         self._anim.setEasingCurve(curve)
 
-    @Property(float, designable=False)
+    @Property(float)
     def overshoot(self):
         return self._overshoot
 
