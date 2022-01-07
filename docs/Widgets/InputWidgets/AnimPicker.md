@@ -7,7 +7,8 @@ grand_parent: Widgets
 
 # MadQt.Widgets.AnimPicker
 #### Version: 0.0.1
-A QPushButton with a hovered state and text
+AnimPicker is a QDialog based on the PySide6 QEasing animation example
+that allows for a user to pick animation curves and parameters.
 
 ### Contributors
 Fabio Goncalves
@@ -15,79 +16,123 @@ Fabio Goncalves
 ### Contact
 [GitHub Page](https://github.com/MadPonyInteractive)
 
-| QtDesigner Plugin? | Yes |
+| QtDesigner Plugin? | No |
 
 | Inheritance                   |
 |:------------------------------|
-| PySide6.QtWidgets.QPushButton |
+| PySide6.QtWidgets.QDialog     |
 
 ***
 
-| Attributes    |      |
-|:--------------|:-----|
-| defaultText   | str  |
-| hoveredText   | str  |
-| hovered       | bool |
-
 | Methods |
 |:----------|
-|def [setHoveredText()](HtButton.html#sethoveredtext)|
-|def [getHoveredText()](HtButton.html#gethoveredtext)|
-|def [setDefaultText()](HtButton.html#setdefaulttext)|
-|def [getDefaultText()](HtButton.html#getdefaulttext)|
-|def [getHovered()](HtButton.html#gethovered)|
+|def [setCurve()](AnimPicker.html#setcurve)|
+|def [curve()](AnimPicker.html#curve)|
+|def [loop()](AnimPicker.html#loop)|
+|def [duration()](AnimPicker.html#duration)|
+|def [period()](AnimPicker.html#period)|
+|def [amplitude()](AnimPicker.html#amplitude)|
+|def [overshoot()](AnimPicker.html#overshoot)|
 
 ***
 
 ## Detailed Description
-HtButton is a handy little button that uses the enterEvent and the leaveEvent
-to set a property (hovered) based on if the button is hovered by the mouse.
+AnimPicker is a QDialog based on the PySide6 QEasing animation example
+that allows for a user to pick animation curves and parameters.
 
-I also allows for setting text for when the button is hovered.
+You can see this dialog in action in the [Expander Plugin](https://madponyinteractive.github.io/MadQt/Widgets/Containers/Expander.html) \
+Or simply by opening it's file located in MadQt/Widgets/anim_picker.py
+
+You can use it as any other QDialog
+```python
+from MadQt.Widgets import AnimPicker
+
+dialog = AnimPicker()
+if dialog.exec() == QDialog.Accepted:
+    print(dialog.curve())
+    print(dialog.loop())
+    print(dialog.duration())
+    print(dialog.period())
+    print(dialog.amplitude())
+    print(dialog.overshoot())
+```
+
+## MadQt.Widgets.AnimPicker
+* Parameters
+    * **curve** - `int`
+    * **loop** - `bool`
+    * **duration** - `int`
+    * **period** - `float`
+    * **amplitude** - `float`
+    * **overshoot** - `float`
+    * **parent** - `QWidget`
 
 ```python
-from MadQt.Widgets import HtButton
-button = HtButton()
-button.setDefaultText("Who's there?")
-button.setHoveredText("It's me, MARIO!")
+from MadQt.Widgets import AnimPicker
+dialog = AnimPicker(
+        curve=35,
+        loop=True,
+        duration=2000,
+        period=None,
+        amplitude=None,
+        overshoot=None,
+        parent=None)
 ```
 
 ***
 
-### setHoveredText
+### setCurve
 * Parameters
-    * **new_hoveredText** - `str`
+    * **curve** - `int`
 
-Sets the text to display when the button is hovered. |
+Sets the curve number to use. |
 
 ***
 
-### getHoveredText
+### curve
 * Return type
-    * `str`
+    * `int`
 
-Returns text displayed when button is hovered. |
-
-***
-
-### setDefaultText
-* Parameters
-    * **new_defaultText** - `str`
-
-Sets the text to display when the button is not hovered. |
+Returns the curve number. |
 
 ***
 
-### getDefaultText
-* Return type
-    * `str`
-
-Returns text displayed when button is not hovered. |
-
-***
-
-### getHovered
+### loop
 * Return type
     * `bool`
 
-Returns True if button is hovered. |
+Returns if loop active. |
+
+***
+
+### duration
+* Return type
+    * `int`
+
+Returns animation duration. |
+
+***
+
+### period
+* Return type
+    * `float`
+
+Returns animation curve period. |
+
+***
+
+### amplitude
+* Return type
+    * `float`
+
+Returns animation curve amplitude. |
+
+***
+
+### overshoot
+* Return type
+    * `float`
+
+Returns animation curve overshoot. |
+
+
