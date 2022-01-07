@@ -342,7 +342,7 @@ if __name__ == '__main__':
     QHBoxLayout(w)
 
     def openDialog():
-        dialog = AnimPicker(w)
+        dialog = AnimPicker(parent=w)
         if dialog.exec() == QDialog.Accepted:
             print(" ".join(F"""
                 curve: {dialog.curve()} |

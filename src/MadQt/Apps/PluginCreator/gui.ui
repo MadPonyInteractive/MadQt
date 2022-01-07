@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
-    <height>595</height>
+    <width>593</width>
+    <height>662</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -145,7 +145,10 @@ QTextEdit,QLineEdit:focus, QComboBox::on, QComboBox QListView::item{
 	background-color: rgb(41, 0, 1);
 }
 
-
+QLineEdit:disabled{
+	background-color: rgb(219, 203, 189);
+	color: rgb(41, 0, 1);
+}
 
 QToolTip { 		
 	font: 600 14pt &quot;Dosis SemiBold&quot;;
@@ -470,22 +473,36 @@ QSlider::groove{
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>563</width>
-         <height>450</height>
+         <width>575</width>
+         <height>517</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout">
-        <item row="1" column="1">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Class Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
          <widget class="QLineEdit" name="pluginName">
           <property name="statusTip">
            <string>Your plugin name</string>
           </property>
           <property name="placeholderText">
-           <string>MyAwedomePlugin</string>
+           <string>MyAwesomePlugin</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Qt Class</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
          <widget class="QLineEdit" name="QtClass">
           <property name="statusTip">
            <string>Qt Class your plugin inherits from</string>
@@ -495,25 +512,22 @@ QSlider::groove{
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="statusTip">
+           <string>Paths to QtDesigner Plugins</string>
+          </property>
+          <property name="text">
+           <string>Size Hint</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QSpinBox" name="geoX">
-            <property name="statusTip">
-             <string>X pos</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="geoY">
-            <property name="statusTip">
-             <string>Y Pos</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Width</string>
             </property>
            </widget>
           </item>
@@ -534,6 +548,13 @@ QSlider::groove{
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Height</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QSpinBox" name="geoH">
             <property name="statusTip">
              <string>Height</string>
@@ -549,9 +570,32 @@ QSlider::groove{
             </property>
            </widget>
           </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
-        <item row="8" column="1">
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="statusTip">
+           <string>Paths to QtDesigner Plugins</string>
+          </property>
+          <property name="text">
+           <string>Properties</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
          <widget class="PathsList" name="propList">
           <property name="statusTip">
            <string>Right click to add/remove properties</string>
@@ -565,7 +609,14 @@ QSlider::groove{
           </property>
          </widget>
         </item>
-        <item row="10" column="1">
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Tooltip</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
          <widget class="QLineEdit" name="tooltipIn">
           <property name="statusTip">
            <string>QtDesigner tooltip</string>
@@ -578,7 +629,14 @@ QSlider::groove{
           </property>
          </widget>
         </item>
-        <item row="12" column="1">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Icon</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_20">
           <property name="spacing">
            <number>8</number>
@@ -630,7 +688,50 @@ QSlider::groove{
           </item>
          </layout>
         </item>
-        <item row="14" column="1">
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Group</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="widgetGroup">
+          <property name="statusTip">
+           <string>Group name in QtDesigner Widget box</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Custom Widgets</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QCheckBox" name="isContainerCb">
+          <property name="statusTip">
+           <string>Will it contain other widgets?</string>
+          </property>
+          <property name="text">
+           <string>Is Container</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Registry</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_21">
           <property name="spacing">
            <number>8</number>
@@ -638,7 +739,7 @@ QSlider::groove{
           <item>
            <widget class="QLineEdit" name="regPath">
             <property name="statusTip">
-             <string>Plugin path or registry file</string>
+             <string>Files path</string>
             </property>
             <property name="text">
              <string/>
@@ -685,94 +786,17 @@ QSlider::groove{
           </item>
          </layout>
         </item>
-        <item row="16" column="0">
-         <widget class="QLabel" name="label_7">
+        <item row="9" column="1">
+         <widget class="QCheckBox" name="addMenuCb">
           <property name="text">
-           <string>Group</string>
+           <string>Add Menu</string>
           </property>
          </widget>
         </item>
-        <item row="16" column="1">
-         <widget class="QLineEdit" name="widgetGroup">
-          <property name="statusTip">
-           <string>Group name in QtDesigner Widget box</string>
-          </property>
+        <item row="7" column="1">
+         <widget class="QCheckBox" name="isMultiCb">
           <property name="text">
-           <string/>
-          </property>
-          <property name="placeholderText">
-           <string>Custom Widgets</string>
-          </property>
-         </widget>
-        </item>
-        <item row="19" column="1">
-         <widget class="QCheckBox" name="isContainerCb">
-          <property name="statusTip">
-           <string>Will it contain other widgets?</string>
-          </property>
-          <property name="text">
-           <string>Is Container</string>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="12" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Icon</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Tooltip</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="statusTip">
-           <string>Paths to QtDesigner Plugins</string>
-          </property>
-          <property name="text">
-           <string>Properties</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="statusTip">
-           <string>Paths to QtDesigner Plugins</string>
-          </property>
-          <property name="text">
-           <string>Geometry</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Qt Class</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Class Name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="14" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Registry</string>
+           <string>Is Multi Page</string>
           </property>
          </widget>
         </item>
@@ -786,7 +810,7 @@ QSlider::groove{
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="statusTip">
-       <string>Create a new project</string>
+       <string>Create Plugin</string>
       </property>
       <property name="text">
        <string>Create Plugin</string>
@@ -836,8 +860,6 @@ QSlider::groove{
  </customwidgets>
  <resources>
   <include location="resources.qrc"/>
-  <include location="../ProjectManager/resources.qrc"/>
-  <include location="C:/Users/mindd/.designer/backup/resources.qrc"/>
  </resources>
  <connections>
   <connection>

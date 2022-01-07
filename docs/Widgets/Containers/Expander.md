@@ -7,7 +7,7 @@ grand_parent: Widgets
 
 # MadQt.Widgets.Expander
 #### Version: 0.0.1
-A QPushButton with a hovered state and text
+A Expandable and animated container
 
 ### Contributors
 Fabio Goncalves
@@ -19,23 +19,39 @@ Fabio Goncalves
 
 | Inheritance                   |
 |:------------------------------|
-| PySide6.QtWidgets.QPushButton |
+| PySide6.QtWidgets.QWidget |
 
 ***
 
 | Attributes    |      |
 |:--------------|:-----|
-| defaultText   | str  |
-| hoveredText   | str  |
-| hovered       | bool |
+| curve         | int  |
+| loop          | bool |
+| duration      | int  |
+| period        | float|
+| amplitude     | float|
+| overshoot     | float|
+| expanded      | bool |
+| animateOnHover| bool |
+| animFrom      | QSize|
+| animTo        | QSize|
+| animateWidth  | bool |
+| animateHeight | bool |
 
-| Methods |
+| Property Methods |
 |:----------|
-|def [setHoveredText()](HtButton.html#sethoveredtext)|
-|def [getHoveredText()](HtButton.html#gethoveredtext)|
-|def [setDefaultText()](HtButton.html#setdefaulttext)|
-|def [getDefaultText()](HtButton.html#getdefaulttext)|
-|def [getHovered()](HtButton.html#gethovered)|
+|def getExpanded()|
+|def setExpanded()|
+|def getAnimateOnHover()|
+|def setAnimateOnHover()|
+|def getAnimFrom()|
+|def setAnimFrom()|
+|def getAnimTo()|
+|def setAnimTo()|
+|def getAnimateWidth()|
+|def setAnimateWidth()|
+|def getAnimateHeight()|
+|def setAnimateHeight()|
 
 ***
 
@@ -46,48 +62,7 @@ to set a property (hovered) based on if the button is hovered by the mouse.
 I also allows for setting text for when the button is hovered.
 
 ```python
-from MadQt.Widgets import HtButton
-button = HtButton()
-button.setDefaultText("Who's there?")
-button.setHoveredText("It's me, MARIO!")
+from MadQt.Widgets import Expander
+expander = Expander()
+
 ```
-
-***
-
-### setHoveredText
-* Parameters
-    * **new_hoveredText** - `str`
-
-Sets the text to display when the button is hovered. |
-
-***
-
-### getHoveredText
-* Return type
-    * `str`
-
-Returns text displayed when button is hovered. |
-
-***
-
-### setDefaultText
-* Parameters
-    * **new_defaultText** - `str`
-
-Sets the text to display when the button is not hovered. |
-
-***
-
-### getDefaultText
-* Return type
-    * `str`
-
-Returns text displayed when button is not hovered. |
-
-***
-
-### getHovered
-* Return type
-    * `bool`
-
-Returns True if button is hovered. |
