@@ -118,10 +118,10 @@ After:
 ***
 
 #### STEP 6 - ADD YOUR PLUGIN
-Just like we did in STEP 3, create a folder in your system using the same
+Create a folder in your system using a similar or same
 name as the one you used for your widget and place all necessary files in it.
 
-Remember in our case we used "hover_text_button"
+In our case we used "hover_text_button"
 
 - hover_text_button
     - htbuttonplugin.py
