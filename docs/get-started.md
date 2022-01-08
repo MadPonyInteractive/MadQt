@@ -24,9 +24,8 @@ pip install --upgrade MadQt
 ***
 
 ### Unlocking QtDesigner Plugins
-Importing MadQt or any module from it will unlock it's plugins in QtDesigner
-
-### Import
+Importing MadQt or any module from it will unlock it's plugins in QtDesigner \
+You only have to do it once so that MadQt can create a permanent environment variable.
 ```python
 import MadQt
 ```
