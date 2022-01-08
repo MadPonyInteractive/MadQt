@@ -9,7 +9,7 @@ nav_order: 1
 ***
 
 Once you have Python and pip installed in your system you can
-install and/or MadQt from a command line.
+install and update MadQt from a command line.
 
 ### Install
 ```python
@@ -19,6 +19,16 @@ pip install MadQt
 ### Update
 ```python
 pip install --upgrade MadQt
+```
+
+***
+
+### Unlocking QtDesigner Plugins
+Importing MadQt or any module from it will unlock it's plugins in QtDesigner
+
+### Import
+```python
+import MadQt
 ```
 
 ***
