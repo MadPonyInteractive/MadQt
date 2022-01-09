@@ -58,10 +58,11 @@ Fabio Goncalves
 ## Detailed Description
 With this container you can easily animate any widget even within QtDesigner.
 
-Will post a video soon...
-
 ```python
 from MadQt.Widgets import Expander
 expander = Expander()
 
 ```
+
+### There's a [video on YouTube](https://www.youtube.com/watch?v=gCK_JRr0lGM) to help you get started.
+[![MadQt Plugin Creator](https://img.youtube.com/vi/tbCJ9UkSh7k/0.jpg)](https://www.youtube.com/watch?v=tbCJ9UkSh7k)
