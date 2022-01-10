@@ -49,7 +49,7 @@
 ############################################################################
 """
 Widget: Expander
-Version: 0.0.1
+Version: 0.0.2
 
 Contributors: Fabio Goncalves
 Email: fabiogoncalves@live.co.uk
@@ -167,14 +167,19 @@ DOM_XML = """
 </ui>
 """
 
-class ExpanderPlugin(QDesignerCustomWidgetInterface):
-    def __init__(self):
-        super().__init__()
+class ExpanderPlugin(QObject, QDesignerCustomWidgetInterface):
+    def __init__(self, parent=None):
+        QObject.__init__(self)
+        QDesignerCustomWidgetInterface.__init__(self)
         self._form_editor = None
 
     def createWidget(self, *args, **kwargs):
-        t = Expander(*args, **kwargs)
-        return t
+        w = Expander(*args, **kwargs)
+        w.maxWidthChanged.connect(self.maxWidthChanged)
+        w.minWidthChanged.connect(self.minWidthChanged)
+        w.maxHeightChanged.connect(self.maxHeightChanged)
+        w.minHeightChanged.connect(self.minHeightChanged)
+        return w
 
     def domXml(self):
         return DOM_XML
@@ -211,3 +216,43 @@ class ExpanderPlugin(QDesignerCustomWidgetInterface):
 
     def whatsThis(self):
         return self.toolTip()
+
+    def maxWidthChanged(self,v):
+        widget = self.sender()
+        if not widget or not isinstance(widget, Expander):return
+        if not widget.isWidgetType():return
+        form = QDesignerFormWindowInterface.findFormWindow(widget)
+        if form:
+            cSize=widget.maximumSize()
+            cSize.setWidth(v)
+            form.cursor().setWidgetProperty(widget, "maximumSize", cSize)
+
+    def minWidthChanged(self,v):
+        widget = self.sender()
+        if not widget or not isinstance(widget, Expander):return
+        if not widget.isWidgetType():return
+        form = QDesignerFormWindowInterface.findFormWindow(widget)
+        if form:
+            cSize=widget.minimumSize()
+            cSize.setWidth(v)
+            form.cursor().setWidgetProperty(widget, "minimumSize", cSize)
+
+    def maxHeightChanged(self,v):
+        widget = self.sender()
+        if not widget or not isinstance(widget, Expander):return
+        if not widget.isWidgetType():return
+        form = QDesignerFormWindowInterface.findFormWindow(widget)
+        if form:
+            cSize=widget.maximumSize()
+            cSize.setHeight(v)
+            form.cursor().setWidgetProperty(widget, "maximumSize", cSize)
+
+    def minHeightChanged(self,v):
+        widget = self.sender()
+        if not widget or not isinstance(widget, Expander):return
+        if not widget.isWidgetType():return
+        form = QDesignerFormWindowInterface.findFormWindow(widget)
+        if form:
+            cSize=widget.minimumSize()
+            cSize.setHeight(v)
+            form.cursor().setWidgetProperty(widget, "minimumSize", cSize)

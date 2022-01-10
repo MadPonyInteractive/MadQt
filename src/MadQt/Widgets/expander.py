@@ -39,7 +39,7 @@
 #############################################################################
 """
 Widget: Expander
-Version: 0.0.1
+Version: 0.0.2
 
 Contributors: Fabio Goncalves
 Email: fabiogoncalves@live.co.uk
@@ -51,14 +51,20 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 class Expander(QWidget):
+    maxWidthChanged = Signal(int)
+    minWidthChanged = Signal(int)
+    maxHeightChanged = Signal(int)
+    minHeightChanged = Signal(int)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._animFrom = QSize(100,100)
         self._animTo = QSize(150,100)
         self._animVal = QSize(100,100)
         self._expanded = False
-        self._animateWidth = True
-        self._animateHeight = False
+        self._animateMaxWidth = True
+        self._animateMinWidth = True
+        self._animateMaxHeight = False
+        self._animateMinHeight = False
         self._animateOnHover = True
 
         self._curve = 35
@@ -80,9 +86,22 @@ class Expander(QWidget):
     @animVal.setter
     def animVal(self, val):
         self._animVal = val
-        if self._animateWidth:self.setFixedWidth(val.width())
-        if self._animateHeight:self.setFixedHeight(val.height())
-
+        if self._animateMaxWidth:
+            v=val.width()
+            self.setMaximumWidth(v)
+            self.maxWidthChanged.emit(v)
+        if self._animateMinWidth:
+            v=val.width()
+            self.setMinimumWidth(v)
+            self.minWidthChanged.emit(v)
+        if self._animateMaxHeight:
+            v=val.height()
+            self.setMaximumHeight(v)
+            self.maxHeightChanged.emit(v)
+        if self._animateMinHeight:
+            v=val.height()
+            self.setMinimumHeight(v)
+            self.minHeightChanged.emit(v)
 
     @Slot(QSize)
     def setAnimFrom(self, new_animFrom):
@@ -114,19 +133,29 @@ class Expander(QWidget):
     def getExpanded(self):
         return self._expanded
 
-    @Slot(bool)
-    def setAnimateWidth(self, anim=True):
-        self._animateWidth = anim
+    def setAnimateMaxWidth(self, anim=True):
+        self._animateMaxWidth = anim
 
-    def getAnimateWidth(self):
-        return self._animateWidth
+    def setAnimateMinWidth(self, anim=True):
+        self._animateMinWidth = anim
 
-    @Slot(bool)
-    def setAnimateHeight(self, anim=True):
-        self._animateHeight = anim
+    def getAnimateMinWidth(self):
+        return self._animateMinWidth
 
-    def getAnimateHeight(self):
-        return self._animateHeight
+    def getAnimateMaxWidth(self):
+        return self._animateMaxWidth
+
+    def setAnimateMaxHeight(self, anim=True):
+        self._animateMaxHeight = anim
+
+    def setAnimateMinHeight(self, anim=True):
+        self._animateMinHeight = anim
+
+    def getAnimateMaxHeight(self):
+        return self._animateMaxHeight
+
+    def getAnimateMinHeight(self):
+        return self._animateMinHeight
 
     @Slot(bool)
     def setAnimateOnHover(self, anim=True):
@@ -219,8 +248,10 @@ class Expander(QWidget):
     animateOnHover = Property(bool, getAnimateOnHover, setAnimateOnHover)
     animFrom = Property(QSize, getAnimFrom, setAnimFrom)
     animTo = Property(QSize, getAnimTo, setAnimTo)
-    animateWidth = Property(bool, getAnimateWidth, setAnimateWidth)
-    animateHeight = Property(bool, getAnimateHeight, setAnimateHeight)
+    animateMaxWidth = Property(bool, getAnimateMaxWidth, setAnimateMaxWidth)
+    animateMinWidth = Property(bool, getAnimateMinWidth, setAnimateMinWidth)
+    animateMaxHeight = Property(bool, getAnimateMaxHeight, setAnimateMaxHeight)
+    animateMinHeight = Property(bool, getAnimateMinHeight, setAnimateMinHeight)
 
 
 if __name__ == '__main__':
