@@ -258,17 +258,22 @@ if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
     window = QWidget()
+    window.setMinimumWidth(260)
 
     QHBoxLayout(window)
     label = QLabel('  Hello  ')
     label.setStyleSheet("background-color:gray;")
 
     expander = Expander()
+
+    # Setting properties
+    expander.curve = QEasingCurve.OutCubic
+    expander.duration = 300
+
     expander.setStyleSheet("background-color:gray;")
     QVBoxLayout(expander)
     expander.layout().setContentsMargins(0,0,0,0)
     expander.layout().addWidget(QLabel('Expandable'))
-    # expander.setAnimateHeight(False)
 
     window.layout().addWidget(label)
     window.layout().addWidget(expander)
