@@ -47,36 +47,36 @@ Fabio Goncalves
 
 | Property Methods |
 |:----------|
-|def getExpanded(bool)|
-|def setExpanded(bool)|
-|def getAnimateOnHover(bool)|
-|def setAnimateOnHover(bool)|
-|def getAnimFrom(QSize)|
-|def setAnimFrom(QSize)|
-|def getAnimTo(QSize)|
-|def setAnimTo(QSize)|
-|def getAnimateMaxWidth(bool)|
-|def getAnimateMinWidth(bool)|
-|def setAnimateMaxWidth(bool)|
-|def setAnimateMinWidth(bool)|
-|def getAnimateMaxHeight(bool)|
-|def getAnimateMinHeight(bool)|
-|def setAnimateMaxHeight(bool)|
-|def setAnimateMinHeight(bool)|
+|def getExpanded| bool |
+|def setExpanded| bool |
+|def getAnimateOnHover| bool |
+|def setAnimateOnHover| bool |
+|def getAnimFrom| QSize |
+|def setAnimFrom| QSize |
+|def getAnimTo| QSize |
+|def setAnimTo| QSize |
+|def getAnimateMaxWidth| bool |
+|def getAnimateMinWidth| bool |
+|def setAnimateMaxWidth| bool |
+|def setAnimateMinWidth| bool |
+|def getAnimateMaxHeight| bool |
+|def getAnimateMinHeight| bool |
+|def setAnimateMaxHeight| bool |
+|def setAnimateMinHeight| bool |
 
 | Signals |
 |:----------|
-|maxWidthChanged(int)|
-|minWidthChanged(int)|
-|maxHeightChanged(int)|
-|minHeightChanged(int)|
+|maxWidthChanged| int |
+|minWidthChanged| int |
+|maxHeightChanged| int |
+|minHeightChanged| int |
 
 | Slots |
 |:----------|
-|setAnimFrom(QSize)|
-|setAnimTo(QSize)|
-|setExpanded(bool)|
-|setAnimateOnHover(bool)|
+|setAnimFrom| QSize |
+|setAnimTo| QSize |
+|setExpanded| bool |
+|setAnimateOnHover| bool |
 
 ***
 
