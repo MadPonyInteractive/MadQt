@@ -64,5 +64,5 @@ expander = Expander()
 
 ```
 
-### There's a [video on YouTube](https://www.youtube.com/watch?v=gCK_JRr0lGM) to help you get started.
+### There's a [video on YouTube](https://www.youtube.com/watch?v=tbCJ9UkSh7k) to help you get started.
 [![MadQt Plugin Creator](https://img.youtube.com/vi/tbCJ9UkSh7k/0.jpg)](https://www.youtube.com/watch?v=tbCJ9UkSh7k)
