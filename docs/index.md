@@ -1,9 +1,3 @@
----
-layout: default
-title: Home
-nav_order: 0
----
-
 # MadQt
 #### Tutorials and Tools for PyQt and PySide
 
@@ -20,6 +14,20 @@ as provide custom widgets and QtDesigner plugins from and to the community.
 [Get Started!](https://madponyinteractive.github.io/MadQt/get-started.html)
 
 ***
+### Compatibility
+MadQt is compatible with python 3.9+ 
+
+Due to PySide6 6.5.0 having some class inheritance issues,we have to limit the PySide6 version to 6.4.3
+
+##### If you already have PySide6 6.5.0 installed, you can downgrade it by running the following command:
+```bash
+pip install PySide6==6.4.3
+```
+
+##### Otherwise, simple install MadQt and it will install the correct version of PySide6 for you.
+
+
+***
 
 Visit our free course on [YouTube](https://youtube.com/playlist?list=PLuvCsqbtUSFAEmez6Tuyi2KitVcS4fLWX)
 
@@ -28,4 +36,5 @@ Support this project:
 <a href="https://www.buymeacoffee.com/MadPonyInt" target="_blank">
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
 </a>
+
 
