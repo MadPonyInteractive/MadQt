@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setuptools.setup(
     name='MadQt',
-    version='0.0.31',
+    version='0.0.32',
     description='Tutorials and Tools for PySide',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -13,7 +13,7 @@ setuptools.setup(
     author='Fabio Goncalves',
     author_email='fabiogoncalves@live.co.uk',
     license='MIT',
-    install_requires=['PySide6 >=6.0.0',# we need it to be able to compile resources
+    install_requires=['PySide6 >= 6.0.0, <= 6.4.3',# we need it to be able to compile resources
                       'Pillow >= 8.3.0',
                       'pyinstaller >= 4.7'
                      ],
