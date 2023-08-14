@@ -1,3 +1,8 @@
+---
+layout: default
+title: Home
+nav_order: 0
+---
 # MadQt
 #### Tutorials and Tools for PyQt and PySide
 
