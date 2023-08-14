@@ -123,9 +123,9 @@ class Expander(QWidget):
     def setExpanded(self, expand=True):
         self._expanded = expand
         if expand:
-            self._anim.setDirection(self._anim.Forward)
+            self._anim.setDirection(self._anim.Direction.Forward)
         else:
-            self._anim.setDirection(self._anim.Backward)
+            self._anim.setDirection(self._anim.Direction.Backward)
 
         if self._anim.state() == self._anim.State.Stopped:
             self._anim.start()
