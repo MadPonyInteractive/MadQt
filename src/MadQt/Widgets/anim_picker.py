@@ -39,8 +39,18 @@
     ##
 #############################################################################
 """
+Widget: AnimPicker
+Version: 1.0.0
+
+Contributors: Fabio Goncalves
+Email: fabiogoncalves@live.co.uk
+
+Description: 
 AnimPicker is a QDialog based on the PySide6 QEasing animation example
 that allows for a user to pick animation parameters.
+
+You can find the original example here:
+Python\\Lib\\site-packages\\PySide6\\examples\\widgets\\animation\\easing
 
 """
 from PySide6.QtCore import (Property, QEasingCurve, QObject, QPropertyAnimation,
@@ -195,64 +205,55 @@ class AnimPicker(QDialog):
         gradient.setColorAt(1.0, QColor(224, 224, 224))
 
         brush = QBrush(gradient)
+        curve_types = [(f"QEasingCurve.{e.name}", e) for e in QEasingCurve.Type if e.value <= 40]
 
-        # The original C++ code uses undocumented calls to get the names of the
-        # different curve types.  We do the Python equivalant (but without
-        # cheating)
-        curve_types = [(n, c) for n, c in QEasingCurve.__dict__.items()
-                        if (isinstance(c, QEasingCurve.Type)
-                            and c != QEasingCurve.Custom
-                            and c != QEasingCurve.NCurveTypes
-                            and c != QEasingCurve.TCBSpline)]
-        curve_types.sort(key=lambda ct: ct[1])
+        with QPainter(pix) as painter:
 
-        painter.begin(pix)
+            for curve_name, curve_type in curve_types:
+                painter.fillRect(QRect(QPoint(0, 0), self._iconSize), brush)
+                curve = QEasingCurve(curve_type)
 
-        for curve_name, curve_type in curve_types:
-            painter.fillRect(QRect(QPoint(0, 0), self._iconSize), brush)
-            curve = QEasingCurve(curve_type)
+                painter.setPen(QColor(0, 0, 255, 64))
+                x_axis = self._iconSize.height() / 1.5
+                y_axis = self._iconSize.width() / 3.0
+                painter.drawLine(0, x_axis, self._iconSize.width(), x_axis)
+                painter.drawLine(y_axis, 0, y_axis, self._iconSize.height())
 
-            painter.setPen(QColor(0, 0, 255, 64))
-            x_axis = self._iconSize.height() / 1.5
-            y_axis = self._iconSize.width() / 3.0
-            painter.drawLine(0, x_axis, self._iconSize.width(), x_axis)
-            painter.drawLine(y_axis, 0, y_axis, self._iconSize.height())
+                curve_scale = self._iconSize.height() / 2.0
 
-            curve_scale = self._iconSize.height() / 2.0
+                painter.setPen(Qt.NoPen)
 
-            painter.setPen(Qt.NoPen)
+                # Start point.
+                painter.setBrush(Qt.red)
+                start = QPoint(y_axis,
+                        x_axis - curve_scale * curve.valueForProgress(0))
+                painter.drawRect(start.x() - 1, start.y() - 1, 3, 3)
 
-            # Start point.
-            painter.setBrush(Qt.red)
-            start = QPoint(y_axis,
-                    x_axis - curve_scale * curve.valueForProgress(0))
-            painter.drawRect(start.x() - 1, start.y() - 1, 3, 3)
+                # End point.
+                painter.setBrush(Qt.blue)
+                end = QPoint(y_axis + curve_scale,
+                        x_axis - curve_scale * curve.valueForProgress(1))
+                painter.drawRect(end.x() - 1, end.y() - 1, 3, 3)
 
-            # End point.
-            painter.setBrush(Qt.blue)
-            end = QPoint(y_axis + curve_scale,
-                    x_axis - curve_scale * curve.valueForProgress(1))
-            painter.drawRect(end.x() - 1, end.y() - 1, 3, 3)
+                curve_path = QPainterPath()
+                curve_path.moveTo(QPointF(start))
+                t = 0.0
+                while t <= 1.0:
+                    to = QPointF(y_axis + curve_scale * t,
+                            x_axis - curve_scale * curve.valueForProgress(t))
+                    curve_path.lineTo(to)
+                    t += 1.0 / curve_scale
 
-            curve_path = QPainterPath()
-            curve_path.moveTo(QPointF(start))
-            t = 0.0
-            while t <= 1.0:
-                to = QPointF(y_axis + curve_scale * t,
-                        x_axis - curve_scale * curve.valueForProgress(t))
-                curve_path.lineTo(to)
-                t += 1.0 / curve_scale
+                painter.setRenderHint(QPainter.Antialiasing, True)
+                painter.strokePath(curve_path, QColor(32, 32, 32))
+                painter.setRenderHint(QPainter.Antialiasing, False)
 
-            painter.setRenderHint(QPainter.Antialiasing, True)
-            painter.strokePath(curve_path, QColor(32, 32, 32))
-            painter.setRenderHint(QPainter.Antialiasing, False)
+                item = QListWidgetItem()
+                item.setIcon(QIcon(pix))
+                item.setText(curve_name)
+                self.easingCurvePicker.addItem(item)
 
-            item = QListWidgetItem()
-            item.setIcon(QIcon(pix))
-            item.setText(curve_name)
-            self.easingCurvePicker.addItem(item)
 
-        painter.end()
 
     def start_animation(self):
         self._anim.setStartValue(QPointF(80, 2))

@@ -39,7 +39,7 @@
 #############################################################################
 """
 Widget: Expander
-Version: 0.0.3
+Version: 1.0.0
 
 Contributors: Fabio Goncalves
 Email: fabiogoncalves@live.co.uk
