@@ -82,7 +82,7 @@ def setPermanentEnv(_env,_paths):
     if os.name == 'posix':  # if is in linux
         exp = f'export {_env}={_paths}'
     if os.name == 'nt':  # if is in windows
-        exp = f'setx {_env} {_paths}'
+        exp = f'setx {_env} "{_paths}"'
     subprocess.Popen(exp, shell=True).wait()
     os.environ[_env]=_paths
 
@@ -102,5 +102,5 @@ def addEnvPath(path_to_set=None):
     # print(os.getenv(envVar))
 addEnvPath()
 
-__version__ = "0.0.32"
+__version__ = "0.0.33"
 __author__ = 'Fabio Goncalves'
