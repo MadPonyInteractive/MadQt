@@ -10,6 +10,7 @@ has a couple of wrappers (PyQt and PySide) that allow us to use the Python codin
 
 MadQt aim is to automate and simplify many of the processes required by Qt as well
 as provide custom widgets and QtDesigner plugins created to and by the community.
+documment d fsfsfd 
 
 ### [Visit the Documentation site to get started!](https://madponyinteractive.github.io/MadQt/get-started.html)
 
