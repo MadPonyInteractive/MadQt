@@ -501,17 +501,24 @@ def compileQrc(qrc,dest_dir=None,overwrite=True):
     """
     src_dir = os.path.dirname(qrc)
     base_name = os.path.basename(qrc)
+    # print(src_dir,base_name)
+    if not isFile(base_name, src_dir):
+        # print(f"Base file {base_name} not found! ------------------")
+        return
     dest_dir = src_dir if not dest_dir else dest_dir
     compiled_name = base_name.replace('.qrc','_rc.py')
 
-    if not isFile(compiled_name) or overwrite:
+    # print(base_name,compiled_name)
+
+    if not isFile(compiled_name, dest_dir) or overwrite:
+        # print("Compiling",base_name,"to",compiled_name,"------------------")
         compiled_path = os.path.join(dest_dir,compiled_name)
         p_dir = os.getcwd()
         os.chdir(src_dir)
         # subprocess.Popen(['MadQt-rcc', base_name, '-o', compiled_path], shell=True).wait()
         subprocess.Popen(['pyside6-rcc', base_name, '-o', compiled_path], shell=True).wait()
         os.chdir(p_dir)
-    return compiled_path
+        return compiled_path
 
 class App:
     """ Creates a QApplication and launches it.
@@ -695,7 +702,8 @@ class Ui:
     def qrcs_includes(self):
         """returns a list with all includes in resources"""
         resources = self.parsed.find('resources')
-        if resources: return [inc for inc in resources.findall('include')]
+        if resources: 
+            return [inc for inc in resources.findall('include')]
         return []
 
     def get_parent(self,elem):

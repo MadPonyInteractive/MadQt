@@ -16,10 +16,10 @@ class JumpButton(QPushButton):
         super().__init__(*args, **kwargs)
         self.marginsAnim = QPropertyAnimation(self, b'geometry')
         self.marginsAnim.setDuration(300)
-        self.marginsAnim.setEasingCurve(QEasingCurve.OutElastic)
+        self.marginsAnim.setEasingCurve(QEasingCurve.Type.OutElastic)
 
     def enterEvent(self,event):
-        self.marginsAnim.setDirection(self.marginsAnim.Forward)
+        self.marginsAnim.setDirection(self.marginsAnim.Direction.Forward)
         if self.marginsAnim.state() == self.marginsAnim.State.Stopped:
             rect = self.geometry()
             self.marginsAnim.setStartValue(rect)
@@ -29,7 +29,7 @@ class JumpButton(QPushButton):
         QPushButton.enterEvent(self, event)
 
     def leaveEvent(self,event):
-        self.marginsAnim.setDirection(self.marginsAnim.Backward)
+        self.marginsAnim.setDirection(self.marginsAnim.Direction.Backward)
         if self.marginsAnim.state() == self.marginsAnim.State.Stopped and self.isEnabled(): self.marginsAnim.start()
         QPushButton.leaveEvent(self, event)
 
@@ -56,7 +56,7 @@ class ToolButton(QToolButton):
 
         self.posAnim = QPropertyAnimation(self.tip, b'pos')
         self.posAnim.setDuration(400)
-        self.posAnim.setEasingCurve(QEasingCurve.OutElastic)
+        self.posAnim.setEasingCurve(QEasingCurve.Type.OutElastic)
 
         self.animGroup = QParallelAnimationGroup(self.tip)
         self.animGroup.addAnimation(self.opacityAnim)
