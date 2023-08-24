@@ -60,7 +60,13 @@ Support this project:
 ### Compatibility
 MadQt is compatible with python 3.9+ 
 
-Due to PySide6 6.5.0 having some class inheritance issues,we have to limit the PySide6 version to 6.4.3
+PySide6 6.5.0 and over presents some class inheritance issues due to it's python compatibility. 
+
+It is advised to use Python 3.7 for maximum compatibility when 
+using PySide6.
+
+Due to this we decided to limit the PySide6 version to 6.4.3 for now to 
+allow for higher versions of python to be used.
 
 ##### If you already have PySide6 6.5.0 installed, you can downgrade it by running the following command:
 ```bash
