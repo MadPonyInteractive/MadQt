@@ -6,7 +6,7 @@ nav_order: 1
 
 # Getting Started
 
-### Prerequisites
+***
 
 #### Python
 MadQt is a python package, this means you will need to have python installed.
