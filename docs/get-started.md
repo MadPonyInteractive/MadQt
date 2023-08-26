@@ -6,40 +6,6 @@ nav_order: 1
 
 # Getting Started
 
-***
-
-Once you have Python and pip installed in your system you can
-install and update MadQt from a command line.
-
-### Install
-```python
-pip install MadQt
-```
-
-### Update
-```python
-pip install --upgrade MadQt
-```
-
-***
-
-### Unlocking QtDesigner Plugins
-Importing MadQt or any module from it will unlock it's plugins in QtDesigner \
-You only have to do it once so that MadQt can create a permanent environment variable.
-```python
-import MadQt
-```
-
-If you are using a virtual environment like "pyenv", in order to access the plugins
-in QtDesigner, you will have to run QtDesigner from the virtual environment.
-
-pyenv example:
-```python
-pyenv exec path/to/env/Lib/site-packages/PySide6/designer.exe
-```
-
-***
-
 ### Prerequisites
 
 #### Python
@@ -72,6 +38,22 @@ in order to install MadQt.
 
 [Installing Pip](https://pip.pypa.io/en/stable/installation/)
 
+
+***
+
+Once you have Python and pip installed in your system you can
+install and update MadQt from a command line.
+
+### Install
+```python
+pip install MadQt
+```
+
+### Update
+```python
+pip install --upgrade MadQt
+```
+
 ***
 
 ### Dependencies
@@ -99,4 +81,20 @@ print("MadQt version:", MadQt.__version__)
 ```python
 import MadQt
 MadQt.__version__
+```
+***
+
+### Unlocking QtDesigner Plugins
+Importing MadQt or any module from it will unlock it's plugins in QtDesigner \
+You only have to do it once so that MadQt can create a permanent environment variable.
+```python
+import MadQt
+```
+
+If you are using a virtual environment like "pyenv", in order to access the plugins
+in QtDesigner, you will have to run QtDesigner from the virtual environment.
+
+pyenv example:
+```python
+pyenv exec path/to/env/Lib/site-packages/PySide6/designer.exe
 ```
