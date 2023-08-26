@@ -30,16 +30,41 @@ You only have to do it once so that MadQt can create a permanent environment var
 import MadQt
 ```
 
+If you are using a virtual environment like "pyenv", in order to access the plugins
+in QtDesigner, you will have to run QtDesigner from the virtual environment.
+
+pyenv example:
+```python
+pyenv exec path/to/env/Lib/site-packages/PySide6/designer.exe
+```
+
 ***
 
 ### Prerequisites
 
 #### Python
-MadQt was developed in a Python 3.10 environment
-and not tested in Python 3.9 but should work
-from version 3.9 as we refrained from using 3.10 new features.
+MadQt is a python package, this means you will need to have python installed.
 
 [Download and install Python](https://www.python.org/downloads/)
+
+##### We prioritized the usage of higher versions of python!
+
+- MadQt uses PySide6.
+
+- PySide6 recommends the usage of Python 3.7 for maximum compatibility.
+
+- When using higher versions of python with PySide 6.5 and over, 
+certain features of PySide6 will not work properly, 
+like multiple class inheritance in certain situations.
+
+For this reason we limited the PySide6 version to 6.4.3 until the PySide6 team
+bumps its python compatibility. This way we can use python 3.9 and over.
+
+<!-- ##### If you already have PySide6 6.5.0 installed, you can downgrade it by running the following command:
+```bash
+pip install PySide6==6.4.3
+``` -->
+***
 
 #### Pip
 MadQt is a pip package, this means you will need to have pip installed
@@ -50,12 +75,12 @@ in order to install MadQt.
 ***
 
 ### Dependencies
-Apart from python the dependencies bellow will automatically be
+Apart from python, the dependencies bellow will automatically be
 installed or updated once you install MadQt via pip.
 
 ```
 Python >= 3.9
-PySide6 >= 6.0.0
+PySide6 >= 6.0.0, <= 6.4.3
 Pillow >= 8.3.0
 pyinstaller >= 4.7
 ```
