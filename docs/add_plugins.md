@@ -49,9 +49,9 @@ Description: A QPushButton with a hovered state and text
 #### STEP 3 - ADD YOUR WIDGET
 Drag and drop your widget file to your forked version of MadQt into the directory MadQt/Widgets/
 
-This could be: `doe_button.py`
+This could be: doe_button.py
 
-Add a description saying something like `new widget submission` and press commit.
+Add a description saying something like "new widget submission" and press commit.
 
 ***
 
@@ -129,14 +129,14 @@ In our case we use "doe_button"
     - doebutton.ico
 
 
-Drag and drop the folder to your forked version of MadQt into the directory `MadQt/QtDesignerPlugins/`
+Drag and drop the folder to your forked version of MadQt into the directory "MadQt/QtDesignerPlugins/"
 
-Add a description saying something like `new plugin submission` and press commit.
+Add a description saying something like "new plugin submission" and press commit.
 
 ***
 
 #### STEP 7 - EDIT REGISTER_ALL.PY
-In `MadQt/QtDesignerPlugins/` you will find a file called `register_all.py`
+In "MadQt/QtDesignerPlugins/" you will find a file called "register_all.py"
 
 You must add your widget and plugin to it
 ```python
@@ -180,11 +180,11 @@ and change the relevant fields.
 
 #### STEP 9 - CREATE A PULL REQUEST
 Navigate to the topmost folder in your forked repository and press
-`New pull request` button.
+"New pull request" button.
 
-On the new page that pops, press `Create pull request`
+On the new page that pops, press "Create pull request"
 
-Add the details of your new plugin and press `Create pull request`
+Add the details of your new plugin and press "Create pull request"
 
 ***
 
