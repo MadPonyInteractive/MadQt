@@ -70,37 +70,23 @@
     ##
     ## $QT_END_LICENSE$
 """
-from __future__ import absolute_import
-import os
+from .ui_file import UiFile
+from .app import App
+from . import (
+    env,
+    files,
+    img,
+    qrc,
+    qt,
+    thread,
+    ui,    
+)
 
-def get_path(path=None):
-    MadQt_root = os.path.abspath(os.path.dirname(__file__))# \site-packages\MadQt
-    return os.path.join(MadQt_root, path) if path else MadQt_root
+""" Adds QtDesignerPlugins folder to the environment
+variable 'PYSIDE_DESIGNER_PLUGINS' so that QtDesigner
+can find the MadQt widgets """
+env.add_qt_plugin_path(files.get_mqt_path("QtDesignerPlugins"))
 
-def setPermanentEnv(_env,_paths):
-    import subprocess
-    if os.name == 'posix':  # if is in linux
-        exp = f'export {_env}={_paths}'
-    if os.name == 'nt':  # if is in windows
-        exp = f'setx {_env} "{_paths}"'
-    subprocess.Popen(exp, shell=True).wait()
-    os.environ[_env]=_paths
 
-def addEnvPath(path_to_set=None):
-    # Setup QDesigner Plugin Paths
-    envVar = "PYSIDE_DESIGNER_PLUGINS"
-    path_to_set = path_to_set if path_to_set else get_path('QtDesignerPlugins')
-    QdPlugins_env = os.getenv(envVar,False)
-    if QdPlugins_env:
-        QdPlugins_env = [i for i in os.environ[envVar].split(os.pathsep)]
-        if path_to_set in QdPlugins_env:return
-        QdPlugins_env.append(path_to_set)
-        _paths = os.pathsep.join(QdPlugins_env)
-    else:
-        _paths = path_to_set
-    setPermanentEnv(envVar,_paths)
-    # print(os.getenv(envVar))
-addEnvPath()
-
-__version__ = "0.0.34"
-__author__ = 'Fabio Goncalves'
+__version__ = "0.0.35"
+__author__ = "Fabio Goncalves (Mad Pony Interactive)"

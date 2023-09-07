@@ -62,13 +62,13 @@ if dialog.exec() == QDialog.Accepted:
 
 ## MadQt.Widgets.AnimPicker
 * Parameters
-    * **curve** - `int`
-    * **loop** - `bool`
-    * **duration** - `int`
-    * **period** - `float`
-    * **amplitude** - `float`
-    * **overshoot** - `float`
-    * **parent** - `QWidget`
+    * **curve** - int
+    * **loop** - bool
+    * **duration** - int
+    * **period** - float
+    * **amplitude** - float
+    * **overshoot** - float
+    * **parent** - QWidget
 
 ```python
 from MadQt.Widgets import AnimPicker
@@ -86,7 +86,7 @@ dialog = AnimPicker(
 
 ### setCurve
 * Parameters
-    * **curve** - `int`
+    * **curve** - int
 
 Sets the curve number to use. |
 
@@ -94,7 +94,7 @@ Sets the curve number to use. |
 
 ### curve
 * Return type
-    * `int`
+    * int
 
 Returns the curve number. |
 
@@ -102,7 +102,7 @@ Returns the curve number. |
 
 ### loop
 * Return type
-    * `bool`
+    * bool
 
 Returns if loop active. |
 
@@ -110,7 +110,7 @@ Returns if loop active. |
 
 ### duration
 * Return type
-    * `int`
+    * int
 
 Returns animation duration. |
 
@@ -118,7 +118,7 @@ Returns animation duration. |
 
 ### period
 * Return type
-    * `float`
+    * float
 
 Returns animation curve period. |
 
@@ -126,7 +126,7 @@ Returns animation curve period. |
 
 ### amplitude
 * Return type
-    * `float`
+    * float
 
 Returns animation curve amplitude. |
 
@@ -134,7 +134,7 @@ Returns animation curve amplitude. |
 
 ### overshoot
 * Return type
-    * `float`
+    * float
 
 Returns animation curve overshoot. |
 

@@ -60,7 +60,7 @@ pip install --upgrade MadQt
 Apart from python, the dependencies bellow will automatically be
 installed or updated once you install MadQt via pip.
 
-```
+```python
 Python >= 3.9
 PySide6 >= 6.0.0, <= 6.4.3
 Pillow >= 8.3.0

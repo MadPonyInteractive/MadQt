@@ -56,7 +56,7 @@ button.setHoveredText("It's me, MARIO!")
 
 ### setHoveredText
 * Parameters
-    * **new_hoveredText** - `str`
+    * **new_hoveredText** - str
 
 Sets the text to display when the button is hovered. |
 
@@ -64,7 +64,7 @@ Sets the text to display when the button is hovered. |
 
 ### getHoveredText
 * Return type
-    * `str`
+    * str
 
 Returns text displayed when button is hovered. |
 
@@ -72,7 +72,7 @@ Returns text displayed when button is hovered. |
 
 ### setDefaultText
 * Parameters
-    * **new_defaultText** - `str`
+    * **new_defaultText** - str
 
 Sets the text to display when the button is not hovered. |
 
@@ -80,7 +80,7 @@ Sets the text to display when the button is not hovered. |
 
 ### getDefaultText
 * Return type
-    * `str`
+    * str
 
 Returns text displayed when button is not hovered. |
 
@@ -88,6 +88,6 @@ Returns text displayed when button is not hovered. |
 
 ### getHovered
 * Return type
-    * `bool`
+    * bool
 
 Returns True if button is hovered. |

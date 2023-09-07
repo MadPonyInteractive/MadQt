@@ -10,7 +10,7 @@ This is really a simple process but depending on what you do in your code
 it can go very wrong.
 
 Note:
-```
+```bash
 MadQt Project Manager uses pyinstaller in the background to do this, so it
 is advisable to read trough pyinstaller documentation before structuring
 your scripts. The usual issues are due to unsupported imports, badly formatted

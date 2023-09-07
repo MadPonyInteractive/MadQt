@@ -42,9 +42,8 @@ this will append the new class to the end of the Custom Widget module.
 Double clicking on a class will open sublime text and go to that line of code.\
 If you don't use sublime, no problem, you can drag and drop modules to any text editor or IDE.
 
-
+***
 Final Note:
-```
+
 Just like images and qrc files are automatically added to
 all ui files custom widgets have the same behavior.
-```
