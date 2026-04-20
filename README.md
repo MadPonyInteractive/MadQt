@@ -1,3 +1,5 @@
+### **Project no longer maintained...**
+
 # MadQt
 #### Apps, widgets and tools for PyQt and PySide
 
